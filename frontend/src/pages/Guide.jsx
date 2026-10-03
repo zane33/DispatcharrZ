@@ -106,6 +106,7 @@ import { showNotification } from '../utils/notificationUtils.js';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 import useAuthStore from '../store/auth';
 import { canManageDvr } from '../utils/dvrAccess';
+import useIsMobile from '../hooks/useIsMobile';
 
 export default function TVChannelGuide({ startDate, endDate }) {
   const [isChannelsLoading, setIsChannelsLoading] = useState(false);
@@ -169,6 +170,10 @@ export default function TVChannelGuide({ startDate, endDate }) {
     width: guideWidth,
     height: guideHeight,
   } = useElementSize();
+  // Header wraps onto several lines on phones, so measure it instead of
+  // assuming a fixed 120px when sizing the grid below it.
+  const { ref: headerRef, height: headerHeight } = useElementSize();
+  const isMobile = useIsMobile();
 
   // Decide if 'All Channel Groups' should be enabled (based on total channel count)
   useEffect(() => {
@@ -616,7 +621,6 @@ export default function TVChannelGuide({ startDate, endDate }) {
     const tvGuide = tvGuideRef.current;
     if (!tvGuide) return;
 
-    let lastTouchX = null;
     let isTouching = false;
     let rafId = null;
     let lastScrollLeft = 0;
@@ -664,7 +668,6 @@ export default function TVChannelGuide({ startDate, endDate }) {
       if (e.touches.length === 1) {
         const guide = guideRef.current;
         if (guide) {
-          lastTouchX = e.touches[0].clientX;
           lastScrollLeft = guide.scrollLeft;
           isTouching = true;
           stableFrames = 0;
@@ -673,35 +676,21 @@ export default function TVChannelGuide({ startDate, endDate }) {
       }
     };
 
-    const handleTouchMove = (e) => {
-      if (!isTouching || e.touches.length !== 1) return;
-      const guide = guideRef.current;
-      if (!guide) return;
-
-      const touchX = e.touches[0].clientX;
-      const deltaX = lastTouchX - touchX;
-      lastTouchX = touchX;
-
-      if (Math.abs(deltaX) > 0) {
-        guide.scrollLeft += deltaX;
-      }
-    };
-
+    // The list's own overflow:auto handles touch panning natively; the old
+    // touchmove handler added deltaX on top and doubled scroll speed on
+    // phones. Polling below keeps the timeline header in sync while touching.
     const handleTouchEnd = () => {
       isTouching = false;
-      lastTouchX = null;
       // Polling continues until scroll stabilizes
     };
 
     tvGuide.addEventListener('touchstart', handleTouchStart, { passive: true });
-    tvGuide.addEventListener('touchmove', handleTouchMove, { passive: false });
     tvGuide.addEventListener('touchend', handleTouchEnd, { passive: true });
     tvGuide.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       tvGuide.removeEventListener('touchstart', handleTouchStart);
-      tvGuide.removeEventListener('touchmove', handleTouchMove);
       tvGuide.removeEventListener('touchend', handleTouchEnd);
       tvGuide.removeEventListener('touchcancel', handleTouchEnd);
     };
@@ -1479,23 +1468,27 @@ export default function TVChannelGuide({ startDate, endDate }) {
     >
       {/* Sticky top bar */}
       <Flex
+        ref={headerRef}
         direction="column"
         style={{
           zIndex: 1000,
           position: 'sticky',
         }}
         c="#ffffff"
-        p={'12px 20px'}
+        p={isMobile ? '8px 10px' : '12px 20px'}
         top={0}
       >
         {/* Title and current time */}
-        <Flex justify="space-between" align="center" mb={12}>
+        <Flex justify="space-between" align="center" mb={isMobile ? 8 : 12}>
           <Title order={3} fw={'bold'}>
             TV Guide
           </Title>
           <Flex align="center" gap="md">
-            <Text>
+            <Text visibleFrom="sm">
               {format(now, `dddd, ${dateFormat}, YYYY • ${timeFormat}`)}
+            </Text>
+            <Text hiddenFrom="sm" size="sm">
+              {format(now, timeFormat)}
             </Text>
             <Tooltip label="Jump to current time">
               <ActionIcon
@@ -1512,12 +1505,12 @@ export default function TVChannelGuide({ startDate, endDate }) {
         </Flex>
 
         {/* Filter controls */}
-        <Flex gap="md" align="center">
+        <Flex gap={isMobile ? 'xs' : 'md'} align="center" wrap="wrap">
           <TextInput
             placeholder="Search channels..."
             value={searchQuery}
             onChange={handleChangeSearchQuery}
-            w={'250px'} // Reduced width from flex: 1
+            w={isMobile ? '100%' : 250}
             leftSection={<Search size={16} />}
             rightSection={
               searchQuery ? (
@@ -1538,7 +1531,8 @@ export default function TVChannelGuide({ startDate, endDate }) {
             data={groupOptions}
             value={selectedGroupId}
             onChange={handleGroupChange} // Use the new handler
-            w={'220px'}
+            w={isMobile ? undefined : 220}
+            style={isMobile ? { flex: '1 1 120px' } : undefined}
             clearable={allowAllGroups} // Allow clearing the selection
           />
 
@@ -1547,7 +1541,8 @@ export default function TVChannelGuide({ startDate, endDate }) {
             data={profileOptions}
             value={selectedProfileId}
             onChange={handleProfileChange} // Use the new handler
-            w={'180px'}
+            w={isMobile ? undefined : 180}
+            style={isMobile ? { flex: '1 1 120px' } : undefined}
             clearable={true} // Allow clearing the selection
           />
 
@@ -1587,7 +1582,7 @@ export default function TVChannelGuide({ startDate, endDate }) {
           flexDirection: 'column',
         }}
         display={'flex'}
-        h={'calc(100vh - 120px)'}
+        h={`calc(100dvh - ${headerHeight || 120}px)`}
       >
         {/* Logo header - Sticky, non-scrollable */}
         <Box

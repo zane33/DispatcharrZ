@@ -178,7 +178,8 @@ def setup_ip_allowed(request):
     return False, client_ip_str
 
 
-def network_access_allowed(request, settings_key, user=None):
+def ip_network_allowed(ip, settings_key):
+    """CIDR allowlist check for a bare IP (used by non-HTTP paths like HDHR UDP discovery)."""
     network_access = CoreSettings.get_network_access_settings()
     # Set defaults based on endpoint type
     if settings_key == "M3U_EPG":
@@ -194,18 +195,19 @@ def network_access_allowed(request, settings_key, user=None):
         else default_cidrs
     )
 
-    client_ip = _normalize_ip(get_client_ip(request))
+    client_ip = _normalize_ip(ip)
     if client_ip is None:
         return False
 
-    network_allowed = False
     for cidr in cidrs:
         network = ipaddress.ip_network(cidr)
         if client_ip in network:
-            network_allowed = True
-            break
+            return True
+    return False
 
-    if not network_allowed:
+
+def network_access_allowed(request, settings_key, user=None):
+    if not ip_network_allowed(get_client_ip(request), settings_key):
         return False
 
     if user is not None:

@@ -79,6 +79,7 @@ import ChannelTableStreams from './ChannelTableStreams';
 import CatchupIndicator from '../CatchupIndicator';
 import LazyLogo from '../LazyLogo';
 import useBrowserStorage from '../../hooks/useBrowserStorage';
+import useIsMobile from '../../hooks/useIsMobile';
 import useEPGsStore from '../../store/epgs';
 import { useChannelLogoSelection } from '../../hooks/useSmartLogos';
 import { CustomTable, useTable } from './CustomTable';
@@ -133,6 +134,9 @@ const flexibleColumns = [
 const defaultColumnSizing = Object.fromEntries(
   flexibleColumns.map(({ id, size }) => [id, size])
 );
+
+// Columns hidden on phones so name + actions fit without horizontal scroll.
+const MOBILE_HIDDEN_COLUMNS = { epg: false, channel_group: false, logo: false };
 
 const ChannelEnabledSwitch = React.memo(
   ({ rowId, selectedProfileId, selectedTableIds }) => {
@@ -314,6 +318,10 @@ const ChannelsTable = ({ onReady }) => {
   const { ensureLogosLoaded } = useChannelLogoSelection();
 
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
+  // Mobile: table fills remaining height instead of fixed 100vh calcs.
+  const fill = (desktopHeight) =>
+    isMobile ? { flex: 1, minHeight: 0 } : { height: desktopHeight };
   const channelGroups = useChannelsStore((s) => s.channelGroups);
   const hasSignaledReady = useRef(false);
   const hasAttemptedChannelRepair = useRef(false);
@@ -1290,7 +1298,9 @@ const ChannelsTable = ({ onReady }) => {
     sorting,
     columnSizing,
     setColumnSizing,
-    pairedColumnSizing: flexibleColumns,
+    pairedColumnSizing: isMobile
+      ? flexibleColumns.filter(({ id }) => !(id in MOBILE_HIDDEN_COLUMNS))
+      : flexibleColumns,
     tableId: 'channels-table',
     onResetColumnSizing: resetColumnSizing,
     fillHeight: true,
@@ -1304,6 +1314,7 @@ const ChannelsTable = ({ onReady }) => {
     state: {
       pagination,
       sorting,
+      ...(isMobile && { columnVisibility: MOBILE_HIDDEN_COLUMNS }),
     },
     columnResizeMode: 'onChange',
     expandedRowRenderer: ({ row }) => {
@@ -1334,9 +1345,20 @@ const ChannelsTable = ({ onReady }) => {
 
   return (
     <>
-      <Box>
+      <Box
+        style={
+          isMobile
+            ? { display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }
+            : undefined
+        }
+      >
         {/* Header Row: outside the Paper */}
-        <Flex style={{ alignItems: 'center', paddingBottom: 10 }} gap={15}>
+        <Flex
+          style={{ alignItems: 'center', paddingBottom: 10 }}
+          gap={15}
+          wrap="wrap"
+          rowGap={6}
+        >
           <Text
             w={88}
             h={24}
@@ -1362,6 +1384,7 @@ const ChannelsTable = ({ onReady }) => {
             <Text
               w={37}
               h={17}
+              visibleFrom="sm"
               style={{
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 400,
@@ -1400,7 +1423,7 @@ const ChannelsTable = ({ onReady }) => {
                   <Stack
                     gap="sm"
                     style={{
-                      minWidth: 300,
+                      minWidth: 'min(300px, calc(100vw - 48px))',
                       maxWidth: 'min(500px, 90vw)',
                       width: 'max-content',
                     }}
@@ -1469,7 +1492,7 @@ const ChannelsTable = ({ onReady }) => {
                   <Stack
                     gap="sm"
                     style={{
-                      minWidth: 300,
+                      minWidth: 'min(300px, calc(100vw - 48px))',
                       maxWidth: 'min(500px, 90vw)',
                       width: 'max-content',
                     }}
@@ -1603,7 +1626,7 @@ const ChannelsTable = ({ onReady }) => {
                   <Stack
                     gap="sm"
                     style={{
-                      minWidth: 300,
+                      minWidth: 'min(300px, calc(100vw - 48px))',
                       maxWidth: 'min(450px, 85vw)',
                       width: 'max-content',
                     }}
@@ -1702,7 +1725,7 @@ const ChannelsTable = ({ onReady }) => {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            height: 'calc(100vh - 60px)',
+            ...fill('calc(100vh - 60px)'),
             backgroundColor: '#27272A',
           }}
         >
@@ -1738,7 +1761,7 @@ const ChannelsTable = ({ onReady }) => {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                height: 'calc(100vh - 100px)',
+                ...fill('calc(100vh - 100px)'),
               }}
             >
               <Box

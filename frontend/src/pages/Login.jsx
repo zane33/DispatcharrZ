@@ -7,7 +7,7 @@ import { Center, Image, Loader, Paper, Stack } from '@mantine/core';
 import logo from '../assets/logo.png';
 
 export const LoginLoadingCard = () => (
-  <Center style={{ height: '100vh' }}>
+  <Center style={{ height: '100dvh' }}>
     <Paper
       elevation={3}
       style={{

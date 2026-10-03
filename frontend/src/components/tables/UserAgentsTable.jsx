@@ -244,9 +244,9 @@ const UserAgentsTable = () => {
             borderRadius: 'var(--mantine-radius-default)',
           }}
         >
-          <div style={{ minWidth: 500 }}>
+          <Box miw={{ base: 0, sm: 500 }}>
             <CustomTable table={table} />
-          </div>
+          </Box>
         </Box>
       </Box>
 

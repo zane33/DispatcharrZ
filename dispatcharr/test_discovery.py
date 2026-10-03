@@ -21,7 +21,6 @@ _SHARED_PATH_PREFIXES: tuple[str, ...] = (
 _PATH_ALIASES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("apps/api/", ("__all__",)),
     ("apps/vod/", ("apps.output",)),
-    ("apps/hdhr/", ("apps.output", "apps.channels")),
 )
 
 

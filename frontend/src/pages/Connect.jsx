@@ -75,7 +75,7 @@ export default function ConnectPage() {
           <Box
             style={{
               gap: '1rem',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(400px, 100%), 1fr))',
               alignContent: 'start',
             }}
             display="grid"

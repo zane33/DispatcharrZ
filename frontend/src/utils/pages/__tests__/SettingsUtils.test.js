@@ -82,6 +82,10 @@ describe('SettingsUtils', () => {
         default_stream_profile: '3',
         default_output_format: 'fmp4',
         hdhr_output_profile_id: '9',
+        hdhr_discovery_enabled: true,
+        hdhr_friendly_name: 'Dispatcharr HDHomeRun',
+        hdhr_device_id: '',
+        hdhr_tuner_count: null,
         m3u_hash_key: ['name', 'url'],
       });
       expect(result).not.toHaveProperty('output_profile_id');

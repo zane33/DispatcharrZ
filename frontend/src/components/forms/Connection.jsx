@@ -279,7 +279,7 @@ const ConnectionForm = ({ connection = null, isOpen, onClose }) => {
           </TabsPanel>
 
           <TabsPanel value="triggers" style={{ paddingTop: 10 }}>
-            <SimpleGrid cols={3}>
+            <SimpleGrid cols={{ base: 1, sm: 3 }}>
               {EVENT_OPTIONS.map((opt) => (
                 <Checkbox
                   key={opt.value}

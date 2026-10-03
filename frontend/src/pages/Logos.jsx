@@ -45,7 +45,10 @@ const LogosPage = () => {
           }}
           w={'100%'}
           maw={'1200px'}
+          px={10}
           pb={10}
+          wrap="wrap"
+          gap={8}
         >
           <Flex gap={8} align="center">
             <Text

@@ -18,6 +18,8 @@ vi.mock('../../components/tables/StreamsTable', () => ({
 }));
 vi.mock('@mantine/core', () => ({
   Box: ({ children, ...props }) => <div {...props}>{children}</div>,
+  Stack: ({ children }) => <div>{children}</div>,
+  SegmentedControl: () => <div data-testid="segmented-control" />,
 }));
 vi.mock('allotment', () => ({
   Allotment: ({ children }) => <div data-testid="allotment">{children}</div>,

@@ -26,7 +26,10 @@ import useAuthStore from './store/auth';
 import useBrowserStorage from './hooks/useBrowserStorage';
 import FloatingVideo from './components/FloatingVideo';
 import { WebsocketProvider } from './WebSocket';
-import { Box, AppShell, MantineProvider } from '@mantine/core';
+import { Box, AppShell, Burger, Group, MantineProvider, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import useIsMobile from './hooks/useIsMobile';
+import logo from './images/logo.png';
 import '@mantine/core/styles.css'; // Ensure Mantine global styles load
 import '@mantine/notifications/styles.css';
 import '@mantine/dropzone/styles.css';
@@ -52,6 +55,9 @@ const LoginRedirect = () => {
 
 const App = () => {
   const [open, setOpen] = useBrowserStorage('dispatcharr_sidebar_open', true);
+  const isMobile = useIsMobile();
+  const [mobileNavOpened, { toggle: toggleMobileNav, close: closeMobileNav }] =
+    useDisclosure(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isInitialized = useAuthStore((s) => s.isInitialized);
   const authReady = isAuthenticated && isInitialized;
@@ -127,19 +133,43 @@ const App = () => {
         <WebsocketProvider>
           <Router>
             <AppShell
-              header={{
-                height: 0,
-              }}
+              // Header only exists on mobile (< sm); desktop keeps height 0.
+              header={{ height: { base: authReady ? 50 : 0, sm: 0 } }}
               navbar={{
                 width: authReady ? (open ? drawerWidth : miniDrawerWidth) : 0,
+                breakpoint: 'sm',
+                collapsed: { mobile: !mobileNavOpened },
               }}
             >
+              {authReady && (
+                <AppShell.Header
+                  hiddenFrom="sm"
+                  style={{
+                    backgroundColor: '#1A1A1E',
+                    borderBottom: '1px solid #2A2A2E',
+                  }}
+                >
+                  <Group h="100%" px="sm" gap="sm" wrap="nowrap">
+                    <Burger
+                      opened={mobileNavOpened}
+                      onClick={toggleMobileNav}
+                      size="sm"
+                      aria-label="Toggle navigation"
+                    />
+                    <img width={26} src={logo} alt="Dispatcharr" />
+                    <Text fw={600} size="lg">
+                      Dispatcharr
+                    </Text>
+                  </Group>
+                </AppShell.Header>
+              )}
               {authReady && (
                 <Sidebar
                   drawerWidth={drawerWidth}
                   miniDrawerWidth={miniDrawerWidth}
-                  collapsed={!open}
-                  toggleDrawer={toggleDrawer}
+                  collapsed={isMobile ? false : !open}
+                  toggleDrawer={isMobile ? closeMobileNav : toggleDrawer}
+                  onNavigate={closeMobileNav}
                 />
               )}
 
@@ -150,11 +180,13 @@ const App = () => {
                     flexDirection: 'column',
                     // transition: 'margin-left 0.3s',
                     backgroundColor: '#18181b',
-                    height: '100vh',
+                    // dvh: mobile browser chrome; offset: mobile header height (0 on desktop)
+                    height:
+                      'calc(100dvh - var(--app-shell-header-offset, 0px))',
                     color: 'white',
                   }}
                 >
-                  <Box sx={{ p: 2, flex: 1, overflow: 'auto' }}>
+                  <Box>
                     {isCheckingAuth ? (
                       <LoginLoadingCard />
                     ) : (

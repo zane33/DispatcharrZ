@@ -23,6 +23,7 @@ import { ExternalLink, Trash, SquareMinus } from 'lucide-react';
 import useVODLogosStore from '../../store/vodLogos';
 import useBrowserStorage from '../../hooks/useBrowserStorage';
 import { CustomTable, useTable } from './CustomTable';
+import useIsMobile from '../../hooks/useIsMobile';
 import ConfirmationDialog from '../ConfirmationDialog';
 import { showNotification } from '../../utils/notificationUtils.js';
 
@@ -54,6 +55,7 @@ const VODLogoRowActions = ({ theme, row, deleteLogo }) => {
 
 export default function VODLogosTable() {
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
 
   const {
     logos,
@@ -403,6 +405,9 @@ export default function VODLogosTable() {
   const table = useTable({
     data: logos,
     columns,
+    state: isMobile
+      ? { columnVisibility: { url: false, usage: false } }
+      : undefined,
     manualPagination: true,
     pageCount: pageCount,
     allRowIds: logos.map((logo) => logo.id),
@@ -438,8 +443,8 @@ export default function VODLogosTable() {
         display: 'flex',
         justifyContent: 'center',
         padding: '0px',
-        minHeight: 'calc(100vh - 200px)',
-        minWidth: '900px',
+        minHeight: 'calc(100dvh - 200px)',
+        minWidth: isMobile ? 0 : 900,
       }}
     >
       <Stack gap="md" style={{ maxWidth: '1200px', width: '100%' }}>
@@ -456,6 +461,8 @@ export default function VODLogosTable() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 12,
               padding: '16px',
               borderBottom: '1px solid #3f3f46',
             }}

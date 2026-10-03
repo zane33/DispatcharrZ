@@ -63,6 +63,7 @@ import useChannelsTableStore from '../../store/channelsTable';
 import useWarningsStore from '../../store/warnings';
 import { CustomTable, useTable } from './CustomTable';
 import useBrowserStorage from '../../hooks/useBrowserStorage';
+import useIsMobile from '../../hooks/useIsMobile';
 import ConfirmationDialog from '../ConfirmationDialog';
 import CreateChannelModal from '../modals/CreateChannelModal';
 import useStreamsTableStore from '../../store/streamsTable';
@@ -231,6 +232,12 @@ export const StreamRowActions = ({
 
 const StreamsTable = ({ onReady }) => {
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
+  // Mobile: 36px touch targets for toolbar buttons.
+  const btnSize = isMobile ? 'sm' : 'xs';
+  // Mobile: table fills remaining height instead of fixed 100vh calcs.
+  const fill = (desktopHeight) =>
+    isMobile ? { flex: 1, minHeight: 0 } : { height: desktopHeight };
   const hasSignaledReady = useRef(false);
   const hasFetchedOnce = useRef(false);
   const hasFetchedPlaylists = useRef(false);
@@ -346,8 +353,12 @@ const StreamsTable = ({ onReady }) => {
   // - Fresh install (null): use defaults
   // - Existing users: merge settings with defaults for any new columns
   const columnVisibility = useMemo(() => {
+    // Phones: M3U/TVG-ID/stats columns don't fit; name + group only.
+    const mobileOverride = isMobile
+      ? { m3u: false, tvg_id: false, stats: false }
+      : {};
     if (!storedColumnVisibility || typeof storedColumnVisibility !== 'object') {
-      return DEFAULT_COLUMN_VISIBILITY;
+      return { ...DEFAULT_COLUMN_VISIBILITY, ...mobileOverride };
     }
     // Merge: start with defaults, overlay stored values only for keys that exist in defaults
     const merged = { ...DEFAULT_COLUMN_VISIBILITY };
@@ -359,8 +370,8 @@ const StreamsTable = ({ onReady }) => {
         merged[key] = storedColumnVisibility[key];
       }
     }
-    return merged;
-  }, [storedColumnVisibility]);
+    return { ...merged, ...mobileOverride };
+  }, [storedColumnVisibility, isMobile]);
 
   const pairedColumnSizing = useMemo(
     () =>
@@ -1491,7 +1502,13 @@ const StreamsTable = ({ onReady }) => {
   ]);
 
   return (
-    <>
+    <Box
+      style={
+        isMobile
+          ? { display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }
+          : undefined
+      }
+    >
       <Flex
         style={{ display: 'flex', alignItems: 'center', paddingBottom: 12 }}
         gap={15}
@@ -1514,7 +1531,8 @@ const StreamsTable = ({ onReady }) => {
 
       <Paper
         style={{
-          height: 'calc(100vh - 60px)',
+          ...fill('calc(100vh - 60px)'),
+          ...(isMobile && { display: 'flex', flexDirection: 'column' }),
           backgroundColor: '#27272A',
         }}
       >
@@ -1522,7 +1540,7 @@ const StreamsTable = ({ onReady }) => {
         <Flex
           justify="space-between"
           align="center"
-          wrap="nowrap"
+          wrap="wrap"
           style={{ padding: 10 }}
           gap={6}
         >
@@ -1537,7 +1555,7 @@ const StreamsTable = ({ onReady }) => {
                     ? 'light'
                     : 'default'
                 }
-                size="xs"
+                size={btnSize}
                 onClick={handleAddStreamsToChannel}
                 p={5}
                 color={
@@ -1566,7 +1584,7 @@ const StreamsTable = ({ onReady }) => {
             >
               <Button
                 variant="default"
-                size="xs"
+                size={btnSize}
                 onClick={createChannelsFromSelection}
                 p={5}
                 disabled={selectedStreamIds.length == 0}
@@ -1580,7 +1598,7 @@ const StreamsTable = ({ onReady }) => {
             <Menu shadow="md" width={200}>
               <MenuTarget>
                 <Tooltip label="Filters" openDelay={500}>
-                  <Button size="xs" variant="default">
+                  <Button size={btnSize} variant="default">
                     <Filter size={18} />
                   </Button>
                 </Tooltip>
@@ -1597,7 +1615,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">Only Unassociated</Text>
+                  <Text size={btnSize}>Only Unassociated</Text>
                 </MenuItem>
                 <MenuItem
                   onClick={toggleHideStale}
@@ -1609,7 +1627,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">Hide Stale</Text>
+                  <Text size={btnSize}>Hide Stale</Text>
                 </MenuItem>
                 <MenuItem
                   onClick={toggleCatchupOnly}
@@ -1621,7 +1639,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">Only Catch-up</Text>
+                  <Text size={btnSize}>Only Catch-up</Text>
                 </MenuItem>
               </MenuDropdown>
             </Menu>
@@ -1629,7 +1647,7 @@ const StreamsTable = ({ onReady }) => {
             <Tooltip label="Create a new custom stream" openDelay={500}>
               <Button
                 variant="light"
-                size="xs"
+                size={btnSize}
                 onClick={() => editStream()}
                 p={5}
                 color={theme.tailwind.green[5]}
@@ -1646,7 +1664,7 @@ const StreamsTable = ({ onReady }) => {
             <Tooltip label="Delete selected stream(s)" openDelay={500}>
               <Button
                 variant="default"
-                size="xs"
+                size={btnSize}
                 onClick={handleDeleteStreams}
                 disabled={selectedStreamIds.length == 0}
                 p={5}
@@ -1658,7 +1676,7 @@ const StreamsTable = ({ onReady }) => {
             <Menu shadow="md" width={200}>
               <MenuTarget>
                 <Tooltip label="Table Settings" openDelay={500}>
-                  <ActionIcon variant="default" size={30}>
+                  <ActionIcon variant="default" size={isMobile ? 36 : 30}>
                     <EllipsisVertical size={18} />
                   </ActionIcon>
                 </Tooltip>
@@ -1676,7 +1694,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">Name</Text>
+                  <Text size={btnSize}>Name</Text>
                 </MenuItem>
                 <MenuItem
                   onClick={() => toggleColumnVisibility('group')}
@@ -1688,7 +1706,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">Group</Text>
+                  <Text size={btnSize}>Group</Text>
                 </MenuItem>
                 <MenuItem
                   onClick={() => toggleColumnVisibility('m3u')}
@@ -1700,7 +1718,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">M3U</Text>
+                  <Text size={btnSize}>M3U</Text>
                 </MenuItem>
                 <MenuItem
                   onClick={() => toggleColumnVisibility('tvg_id')}
@@ -1712,7 +1730,7 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">TVG-ID</Text>
+                  <Text size={btnSize}>TVG-ID</Text>
                 </MenuItem>
                 <MenuItem
                   onClick={() => toggleColumnVisibility('stats')}
@@ -1724,14 +1742,14 @@ const StreamsTable = ({ onReady }) => {
                     )
                   }
                 >
-                  <Text size="xs">Stats</Text>
+                  <Text size={btnSize}>Stats</Text>
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem
                   onClick={resetColumnVisibility}
                   leftSection={<RotateCcw size={18} />}
                 >
-                  <Text size="xs">Reset to Default</Text>
+                  <Text size={btnSize}>Reset to Default</Text>
                 </MenuItem>
               </MenuDropdown>
             </Menu>
@@ -1750,6 +1768,7 @@ const StreamsTable = ({ onReady }) => {
                 borderColor: '#444',
                 textAlign: 'center',
                 width: '400px',
+                maxWidth: '100%',
               }}
             >
               <Stack align="center">
@@ -1796,7 +1815,7 @@ const StreamsTable = ({ onReady }) => {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              height: 'calc(100vh - 100px)',
+              ...fill('calc(100vh - 100px)'),
             }}
           >
             <Box
@@ -1926,7 +1945,7 @@ This action cannot be undone.`}
         loading={deleting}
         size="md"
       />
-    </>
+    </Box>
   );
 };
 

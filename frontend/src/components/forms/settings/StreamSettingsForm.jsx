@@ -11,7 +11,16 @@ import {
   saveGroupSettings,
 } from '../../../utils/pages/SettingsUtils.js';
 import useSettingsSaveGuard from '../../../hooks/useSettingsSaveGuard.jsx';
-import { Alert, Button, Flex, MultiSelect, Select } from '@mantine/core';
+import {
+  Alert,
+  Button,
+  Flex,
+  MultiSelect,
+  NumberInput,
+  Select,
+  Switch,
+  TextInput,
+} from '@mantine/core';
 import ConfirmationDialog from '../../ConfirmationDialog.jsx';
 import { useForm } from '@mantine/form';
 import {
@@ -40,6 +49,19 @@ const StreamSettingsForm = React.memo(({ active }) => {
   // Add a new state to track the dialog type
   const [rehashDialogType, setRehashDialogType] = useState(null); // 'save' or 'rehash'
   const { isSavingRef, runSave } = useSettingsSaveGuard();
+  // Auto tuner count as the backend computes it (TunerCount in discover.json)
+  const [autoTunerCount, setAutoTunerCount] = useState(null);
+  useEffect(() => {
+    if (typeof fetch !== 'function') return;
+    try {
+      fetch('/hdhr/discover.json')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => d && setAutoTunerCount(d.TunerCount))
+        .catch(() => {});
+    } catch {
+      // ignore - description just omits the computed value
+    }
+  }, []);
 
   const form = useForm({
     mode: 'controlled',
@@ -221,6 +243,52 @@ const StreamSettingsForm = React.memo(({ active }) => {
           data={outputProfiles
             .filter((p) => p.is_active)
             .map((p) => ({ value: `${p.id}`, label: p.name }))}
+        />
+
+        <Switch
+          {...form.getInputProps('hdhr_discovery_enabled', {
+            type: 'checkbox',
+          })}
+          id="hdhr_discovery_enabled"
+          name="hdhr_discovery_enabled"
+          label="Broadcast HDHomeRun discovery (Plex/Emby/Jellyfin auto-detect)"
+          description="Answer HDHomeRun discovery broadcasts on UDP 65001. Requires host networking in Docker; otherwise add the tuner manually via /hdhr/discover.json."
+          mt="sm"
+        />
+        <TextInput
+          {...form.getInputProps('hdhr_friendly_name')}
+          id="hdhr_friendly_name"
+          name="hdhr_friendly_name"
+          label="HDHomeRun Device Name"
+          description="Name shown by Plex/Emby/Jellyfin when the tuner is detected."
+        />
+        <TextInput
+          {...form.getInputProps('hdhr_device_id')}
+          id="hdhr_device_id"
+          name="hdhr_device_id"
+          label="HDHomeRun Device ID"
+          description="8 hex digits with a valid SiliconDust checksum. Leave blank to auto-generate a stable ID. Changing it makes clients see a new tuner."
+          placeholder="Auto-generated"
+        />
+        <NumberInput
+          id="hdhr_tuner_count"
+          name="hdhr_tuner_count"
+          label="HDHomeRun Tuner Count"
+          description={`Concurrent streams advertised to clients. Blank = auto from M3U profile limits${
+            autoTunerCount != null ? ` (currently ${autoTunerCount})` : ''
+          }.`}
+          placeholder="Auto"
+          min={1}
+          max={255}
+          allowDecimal={false}
+          value={form.values['hdhr_tuner_count'] ?? ''}
+          onChange={(value) =>
+            form.setFieldValue(
+              'hdhr_tuner_count',
+              value === '' || value == null ? null : Number(value)
+            )
+          }
+          error={form.errors['hdhr_tuner_count']}
         />
 
         <MultiSelect

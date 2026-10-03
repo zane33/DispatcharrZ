@@ -488,7 +488,34 @@ class CoreSettings(models.Model):
             "m3u_hash_key": "",
             "default_output_format": "mpegts",
             "hdhr_output_profile_id": None,
+            "hdhr_discovery_enabled": True,
+            "hdhr_friendly_name": "Dispatcharr HDHomeRun",
+            "hdhr_device_id": "",
+            "hdhr_tuner_count": None,
         })
+
+    @classmethod
+    def get_hdhr_settings(cls):
+        """Resolved HDHomeRun emulation settings: discovery_enabled, friendly_name,
+        device_id (generated + persisted on first use), tuner_count (auto when unset)."""
+        from apps.hdhr.discovery import generate_device_id, validate_device_id
+        from apps.m3u.utils import calculate_tuner_count
+
+        raw = cls.get_stream_settings()
+        device_id = str(raw.get("hdhr_device_id") or "").upper()
+        if not validate_device_id(device_id):
+            device_id = generate_device_id()
+            cls._update_group(STREAM_SETTINGS_KEY, "Stream Settings", {"hdhr_device_id": device_id})
+        try:
+            tuner_count = int(raw.get("hdhr_tuner_count"))
+        except (TypeError, ValueError):
+            tuner_count = calculate_tuner_count(minimum=1, unlimited_default=10)
+        return {
+            "discovery_enabled": raw.get("hdhr_discovery_enabled", True) is not False,
+            "friendly_name": (raw.get("hdhr_friendly_name") or "").strip() or "Dispatcharr HDHomeRun",
+            "device_id": device_id,
+            "tuner_count": max(1, min(tuner_count, 255)),
+        }
 
     @classmethod
     def get_default_user_agent_id(cls):

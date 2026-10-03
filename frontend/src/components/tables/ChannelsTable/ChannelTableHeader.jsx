@@ -45,6 +45,7 @@ import {
 import useChannelsStore from '../../../store/channels';
 import useChannelsTableStore from '../../../store/channelsTable';
 import useAuthStore from '../../../store/auth';
+import useIsMobile from '../../../hooks/useIsMobile';
 import { USER_LEVELS } from '../../../constants';
 import AssignChannelNumbersForm from '../../forms/AssignChannelNumbers';
 import GroupManager from '../../forms/GroupManager';
@@ -151,6 +152,10 @@ const ChannelTableHeader = ({
   setVisibilityFilter,
 }) => {
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
+  // Mobile: 36px touch targets; secondary buttons move into the "..." menu.
+  const btnSize = isMobile ? 'sm' : 'xs';
+  const iconSize = isMobile ? 36 : 30;
 
   const [assignNumbersModalOpen, setAssignNumbersModalOpen] = useState(false);
   const [groupManagerOpen, setGroupManagerOpen] = useState(false);
@@ -170,6 +175,8 @@ const ChannelTableHeader = ({
   const selectedProfileId = useChannelsStore((s) => s.selectedProfileId);
   const setSelectedProfileId = useChannelsStore((s) => s.setSelectedProfileId);
   const authUser = useAuthStore((s) => s.user);
+  const isAdmin = authUser.user_level == USER_LEVELS.ADMIN;
+  const canEditSelection = selectedTableIds.length > 0 && isAdmin;
   const isWarningSuppressed = useWarningsStore((s) => s.isWarningSuppressed);
   const suppressWarning = useWarningsStore((s) => s.suppressWarning);
   const isUnlocked = useChannelsTableStore((s) => s.isUnlocked);
@@ -264,10 +271,14 @@ const ChannelTableHeader = ({
   };
 
   return (
-    <Group justify="space-between">
-      <Group gap={5} style={{ paddingLeft: 10 }}>
+    <Group justify="space-between" wrap={isMobile ? 'nowrap' : 'wrap'}>
+      <Group
+        gap={5}
+        wrap="nowrap"
+        style={{ paddingLeft: 10, ...(isMobile && { flex: 1, minWidth: 0 }) }}
+      >
         <Select
-          size="xs"
+          size={btnSize}
           allowDeselect={false}
           value={selectedProfileId}
           onChange={setSelectedProfileId}
@@ -276,7 +287,7 @@ const ChannelTableHeader = ({
             value: `${profile.id}`,
           }))}
           renderOption={renderModalOption}
-          style={{ minWidth: 190 }}
+          style={isMobile ? { flex: 1, minWidth: 0 } : { minWidth: 190 }}
         />
 
         <Tooltip label="Create Profile">
@@ -308,10 +319,10 @@ const ChannelTableHeader = ({
           padding: 10,
         }}
       >
-        <Flex gap={6}>
+        <Flex gap={6} wrap="nowrap">
           <Menu shadow="md" width={200}>
             <MenuTarget>
-              <Button size="xs" variant="default" onClick={() => {}}>
+              <Button size={btnSize} variant="default" onClick={() => {}}>
                 <Filter size={18} />
               </Button>
             </MenuTarget>
@@ -410,55 +421,59 @@ const ChannelTableHeader = ({
             </MenuDropdown>
           </Menu>
 
-          <Tooltip label="Edit" openDelay={500}>
-            <Button
-              variant="default"
-              size="xs"
-              onClick={() => editChannel()}
-              disabled={
-                selectedTableIds.length == 0 ||
-                authUser.user_level != USER_LEVELS.ADMIN
-              }
-              p={5}
-            >
-              <SquarePen size={18} />
-            </Button>
-          </Tooltip>
+          {!isMobile && (
+            <>
+              <Tooltip label="Edit" openDelay={500}>
+                <Button
+                  variant="default"
+                  size="xs"
+                  onClick={() => editChannel()}
+                  disabled={
+                    selectedTableIds.length == 0 ||
+                    authUser.user_level != USER_LEVELS.ADMIN
+                  }
+                  p={5}
+                >
+                  <SquarePen size={18} />
+                </Button>
+              </Tooltip>
 
-          <Tooltip label="Delete" openDelay={500}>
-            <Button
-              variant="default"
-              size="xs"
-              onClick={deleteChannels}
-              disabled={
-                selectedTableIds.length == 0 ||
-                authUser.user_level != USER_LEVELS.ADMIN
-              }
-              p={5}
-            >
-              <SquareMinus size={18} />
-            </Button>
-          </Tooltip>
+              <Tooltip label="Delete" openDelay={500}>
+                <Button
+                  variant="default"
+                  size="xs"
+                  onClick={deleteChannels}
+                  disabled={
+                    selectedTableIds.length == 0 ||
+                    authUser.user_level != USER_LEVELS.ADMIN
+                  }
+                  p={5}
+                >
+                  <SquareMinus size={18} />
+                </Button>
+              </Tooltip>
 
-          <Tooltip label="Add to Profile" openDelay={500}>
-            <Button
-              variant="default"
-              size="xs"
-              onClick={() => setAddToProfileModalOpen(true)}
-              disabled={
-                selectedTableIds.length == 0 ||
-                authUser.user_level != USER_LEVELS.ADMIN
-              }
-              p={5}
-            >
-              <FolderPlus size={18} />
-            </Button>
-          </Tooltip>
+              <Tooltip label="Add to Profile" openDelay={500}>
+                <Button
+                  variant="default"
+                  size="xs"
+                  onClick={() => setAddToProfileModalOpen(true)}
+                  disabled={
+                    selectedTableIds.length == 0 ||
+                    authUser.user_level != USER_LEVELS.ADMIN
+                  }
+                  p={5}
+                >
+                  <FolderPlus size={18} />
+                </Button>
+              </Tooltip>
+            </>
+          )}
 
           <Tooltip label="Add Channel" openDelay={500}>
             <Button
               variant="light"
-              size="xs"
+              size={btnSize}
               onClick={() => editChannel(null, { forceAdd: true })}
               disabled={authUser.user_level != USER_LEVELS.ADMIN}
               p={5}
@@ -477,12 +492,38 @@ const ChannelTableHeader = ({
 
           <Menu>
             <MenuTarget>
-              <ActionIcon variant="default" size={30}>
+              <ActionIcon variant="default" size={iconSize}>
                 <EllipsisVertical size={18} />
               </ActionIcon>
             </MenuTarget>
 
             <MenuDropdown>
+              {isMobile && (
+                <>
+                  <MenuItem
+                    leftSection={<SquarePen size={18} />}
+                    disabled={!canEditSelection}
+                    onClick={() => editChannel()}
+                  >
+                    <Text size="xs">Edit Selected</Text>
+                  </MenuItem>
+                  <MenuItem
+                    leftSection={<SquareMinus size={18} />}
+                    disabled={!canEditSelection}
+                    onClick={deleteChannels}
+                  >
+                    <Text size="xs">Delete Selected</Text>
+                  </MenuItem>
+                  <MenuItem
+                    leftSection={<FolderPlus size={18} />}
+                    disabled={!canEditSelection}
+                    onClick={() => setAddToProfileModalOpen(true)}
+                  >
+                    <Text size="xs">Add to Profile</Text>
+                  </MenuItem>
+                  <MenuDivider />
+                </>
+              )}
               <MenuItem
                 leftSection={
                   headerPinned ? <Pin size={18} /> : <PinOff size={18} />

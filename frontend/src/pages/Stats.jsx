@@ -551,7 +551,7 @@ const StatsPage = () => {
   return (
     <>
       <Box style={{ overflowX: 'auto' }}>
-        <Box miw={520}>
+        <Box miw={{ base: 0, sm: 520 }}>
           <Box p={10} style={{ borderBottom: '1px solid #444' }}>
             <Group justify="space-between" align="center">
               <Title order={3}>Active Connections</Title>
@@ -605,7 +605,7 @@ const StatsPage = () => {
           <Box
             style={{
               gap: '1rem',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(500px, 100%), 1fr))',
               alignContent: 'start',
             }}
             display="grid"

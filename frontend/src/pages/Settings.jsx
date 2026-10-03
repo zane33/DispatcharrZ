@@ -1,10 +1,13 @@
 import React, { Suspense } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
+  Anchor,
   Box,
   Divider,
   Loader,
+  NavLink,
   Paper,
+  Stack,
   Text,
 } from '@mantine/core';
 import { getVisibleSettingsGroups } from '../config/settingsNav';
@@ -30,6 +33,10 @@ const SettingsPage = () => {
     <Box p={10} maw={900} mx="auto">
       {ActiveComponent ? (
         <Paper withBorder p="md" radius="md">
+          {/* Phones have no settings sub-nav in the sidebar; give a way back. */}
+          <Anchor component={Link} to="/settings" size="sm" hiddenFrom="sm">
+            ← All settings
+          </Anchor>
           <Text size="lg" fw={600} mb={6}>
             {activeSectionConfig.label}
           </Text>
@@ -41,19 +48,40 @@ const SettingsPage = () => {
           </ErrorBoundary>
         </Paper>
       ) : (
-        <Box
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            minHeight: 200,
-          }}
-        >
-          <Text c="dimmed" size="sm">
-            Select a setting from the sidebar
-          </Text>
-        </Box>
+        <>
+          <Box
+            visibleFrom="sm"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              minHeight: 200,
+            }}
+          >
+            <Text c="dimmed" size="sm">
+              Select a setting from the sidebar
+            </Text>
+          </Box>
+          <Stack gap="md" hiddenFrom="sm">
+            {visibleGroups.map((group) => (
+              <Paper key={group.id} withBorder radius="md" p="xs">
+                <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm" py={4}>
+                  {group.label}
+                </Text>
+                {group.sections.map((section) => (
+                  <NavLink
+                    key={section.id}
+                    component={Link}
+                    to={`/settings#${section.id}`}
+                    label={section.label}
+                    leftSection={<section.icon size={16} />}
+                  />
+                ))}
+              </Paper>
+            ))}
+          </Stack>
+        </>
       )}
     </Box>
   );

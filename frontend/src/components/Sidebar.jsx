@@ -186,7 +186,7 @@ const BackButton = ({ label, collapsed, onClick }) => (
 
 // ─── Sidebar ─────────────────────────────────────────────────────────────────
 
-const Sidebar = ({ collapsed, toggleDrawer, drawerWidth, miniDrawerWidth }) => {
+const Sidebar = ({ collapsed, toggleDrawer, drawerWidth, miniDrawerWidth, onNavigate }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -245,6 +245,12 @@ const Sidebar = ({ collapsed, toggleDrawer, drawerWidth, miniDrawerWidth }) => {
       return curr;
     });
   }, [isSettingsPage, pushPanel]);
+
+  // Mobile: close the overlay navbar whenever the route changes.
+  useEffect(() => {
+    onNavigate?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, location.hash]);
 
   const copyPublicIP = async () => {
     await copyToClipboard(environment.public_ip, {
@@ -359,7 +365,6 @@ const Sidebar = ({ collapsed, toggleDrawer, drawerWidth, miniDrawerWidth }) => {
       style={{
         backgroundColor: '#1A1A1E',
         borderRight: '1px solid #2A2A2E',
-        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
       }}

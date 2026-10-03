@@ -15,7 +15,7 @@ const PageContent = () => {
       style={{
         // Fill the viewport exactly; never scroll the page itself. Each table
         // scrolls internally within its own share of the height.
-        height: '100vh',
+        height: '100dvh',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',

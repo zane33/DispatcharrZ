@@ -272,7 +272,7 @@ const DVRPage = () => {
           placeholder="Search recordings..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          w={'250px'}
+          w={{ base: '100%', sm: 250 }}
           leftSection={<Search size={16} />}
           rightSection={
             searchQuery ? (
@@ -293,7 +293,7 @@ const DVRPage = () => {
           data={channelOptions}
           value={selectedChannelId}
           onChange={setSelectedChannelId}
-          w={'220px'}
+          w={{ base: '100%', sm: 220 }}
           clearable
           searchable
         />
@@ -303,7 +303,7 @@ const DVRPage = () => {
           data={STATUS_OPTIONS}
           value={selectedStatus}
           onChange={setSelectedStatus}
-          w={'180px'}
+          w={{ base: '100%', sm: 180 }}
           clearable
         />
 
@@ -323,14 +323,7 @@ const DVRPage = () => {
                 : inProgress.length}
             </Badge>
           </Group>
-          <SimpleGrid
-            cols={3}
-            spacing="md"
-            breakpoints={[
-              { maxWidth: '62rem', cols: 2 },
-              { maxWidth: '36rem', cols: 1 },
-            ]}
-          >
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
             {
               <RecordingList
                 list={filteredInProgress}
@@ -359,14 +352,7 @@ const DVRPage = () => {
                 : upcoming.length}
             </Badge>
           </Group>
-          <SimpleGrid
-            cols={3}
-            spacing="md"
-            breakpoints={[
-              { maxWidth: '62rem', cols: 2 },
-              { maxWidth: '36rem', cols: 1 },
-            ]}
-          >
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
             {
               <RecordingList
                 list={filteredUpcoming}
@@ -395,14 +381,7 @@ const DVRPage = () => {
                 : completed.length}
             </Badge>
           </Group>
-          <SimpleGrid
-            cols={3}
-            spacing="md"
-            breakpoints={[
-              { maxWidth: '62rem', cols: 2 },
-              { maxWidth: '36rem', cols: 1 },
-            ]}
-          >
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
             {
               <RecordingList
                 list={filteredCompleted}

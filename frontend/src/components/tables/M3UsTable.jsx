@@ -45,6 +45,7 @@ import {
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import useWarningsStore from '../../store/warnings';
 import { CustomTable, useTable } from './CustomTable';
+import useIsMobile from '../../hooks/useIsMobile';
 import {
   deletePlaylist,
   getExpirationInfo,
@@ -136,6 +137,7 @@ const M3UTable = () => {
   });
   const [data, setData] = useState([]);
   const [sorting, setSorting] = useState([{ id: 'name', desc: '' }]);
+  const isMobile = useIsMobile();
   const [deleting, setDeleting] = useState(false);
   const [serverGroupsManagerOpen, setServerGroupsManagerOpen] = useState(false);
 
@@ -679,6 +681,20 @@ const M3UTable = () => {
 
   const table = useTable({
     columns,
+    // Phones only get name / status / actions; the rest lives in the edit form.
+    state: isMobile
+      ? {
+          columnVisibility: {
+            account_type: false,
+            server_url: false,
+            last_message: false,
+            max_streams: false,
+            earliest_expiration: false,
+            updated_at: false,
+            is_active: false,
+          },
+        }
+      : undefined,
     // Sort data before passing to table: active first, then by name
     data: filteredData,
     allRowIds: filteredData.map((playlist) => playlist.id),
@@ -741,6 +757,7 @@ const M3UTable = () => {
           flexShrink: 0,
         }}
         gap={15}
+        wrap="wrap"
       >
         <Text
           h={24}

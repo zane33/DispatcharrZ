@@ -9,6 +9,7 @@ services:
     ports:
       - 5656:5656
       - 9191:9191
+      - 65001:65001/udp  # HDHomeRun discovery; needs network_mode: host to receive LAN broadcasts
       - 8001:8001
     volumes:
       - ../:/app

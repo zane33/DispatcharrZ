@@ -22,6 +22,10 @@ describe('StreamSettingsFormUtils', () => {
         m3u_hash_key: [],
         default_output_format: 'mpegts',
         hdhr_output_profile_id: null,
+        hdhr_discovery_enabled: true,
+        hdhr_friendly_name: 'Dispatcharr HDHomeRun',
+        hdhr_device_id: '',
+        hdhr_tuner_count: null,
       });
     });
 
@@ -67,6 +71,9 @@ describe('StreamSettingsFormUtils', () => {
       expect(Object.keys(result)).toEqual([
         'default_user_agent',
         'default_stream_profile',
+        'hdhr_friendly_name',
+        'hdhr_device_id',
+        'hdhr_tuner_count',
       ]);
     });
 
@@ -106,6 +113,54 @@ describe('StreamSettingsFormUtils', () => {
       expect(result['default_user_agent']).toBe('Select a user agent');
       expect(result['default_stream_profile']).toBe('Select a stream profile');
       expect(result).not.toHaveProperty('preferred_region');
+    });
+  });
+
+  describe('isValidHdhrDeviceId', () => {
+    it('accepts IDs with a valid SiliconDust checksum', () => {
+      // lookup[1]=0x5 ^ lookup[0]*3 (0xA^0xA^0xA=0xA) = 0xF -> last nibble F
+      expect(StreamSettingsFormUtils.isValidHdhrDeviceId('1000000F')).toBe(
+        true
+      );
+      expect(StreamSettingsFormUtils.isValidHdhrDeviceId('1d711646')).toBe(
+        true
+      );
+    });
+
+    it('rejects wrong checksum, wrong length and non-hex', () => {
+      expect(StreamSettingsFormUtils.isValidHdhrDeviceId('12345678')).toBe(
+        false
+      );
+      expect(StreamSettingsFormUtils.isValidHdhrDeviceId('1000000')).toBe(
+        false
+      );
+      expect(StreamSettingsFormUtils.isValidHdhrDeviceId('zzzzzzzz')).toBe(
+        false
+      );
+      expect(StreamSettingsFormUtils.isValidHdhrDeviceId('')).toBe(false);
+    });
+  });
+
+  describe('HDHR validation rules', () => {
+    const rules = StreamSettingsFormUtils.getStreamSettingsFormValidation();
+
+    it('allows blank device ID (auto-generate) and rejects invalid ones', () => {
+      expect(rules.hdhr_device_id('')).toBeNull();
+      expect(rules.hdhr_device_id('1000000F')).toBeNull();
+      expect(rules.hdhr_device_id('12345678')).toMatch(/checksum/);
+    });
+
+    it('allows blank tuner count (auto) and enforces 1-255', () => {
+      expect(rules.hdhr_tuner_count(null)).toBeNull();
+      expect(rules.hdhr_tuner_count('')).toBeNull();
+      expect(rules.hdhr_tuner_count(4)).toBeNull();
+      expect(rules.hdhr_tuner_count(0)).toMatch(/1-255/);
+      expect(rules.hdhr_tuner_count(256)).toMatch(/1-255/);
+    });
+
+    it('limits friendly name to 64 chars', () => {
+      expect(rules.hdhr_friendly_name('Lounge')).toBeNull();
+      expect(rules.hdhr_friendly_name('x'.repeat(65))).toMatch(/64/);
     });
   });
 });

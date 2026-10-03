@@ -53,6 +53,7 @@ vi.mock('@mantine/hooks', () => ({
     width: 1200,
     height: 800,
   }),
+  useMediaQuery: () => false,
 }));
 vi.mock('@mantine/core', async () => {
   const actual = await vi.importActual('@mantine/core');

@@ -10,7 +10,7 @@ from dispatcharr.log_collector import (
     MAX_LOG_KEEP,
     MAX_LOG_MB,
 )
-from .models import CoreSettings, UserAgent, StreamProfile, OutputProfile, DVR_SETTINGS_KEY, NETWORK_ACCESS_KEY, SYSTEM_SETTINGS_KEY
+from .models import CoreSettings, UserAgent, StreamProfile, OutputProfile, DVR_SETTINGS_KEY, NETWORK_ACCESS_KEY, SYSTEM_SETTINGS_KEY, STREAM_SETTINGS_KEY
 
 
 def _clamp_int(value, default, lo, hi):
@@ -100,6 +100,11 @@ class CoreSettingsSerializer(serializers.ModelSerializer):
                 if "log_persist" in value:
                     value["log_persist"] = value["log_persist"] is not False
 
+        if instance.key == STREAM_SETTINGS_KEY:
+            value = validated_data.get("value")
+            if isinstance(value, dict):
+                self._validate_hdhr(value)
+
         # Sanitize series_rules when DVR settings are saved through the
         # generic settings API (e.g. Settings page round-trip) to prevent
         # corrupted non-dict entries from persisting.
@@ -119,6 +124,34 @@ class CoreSettingsSerializer(serializers.ModelSerializer):
         # in core/signals.py to ensure it happens even if settings are updated elsewhere
 
         return result
+
+    @staticmethod
+    def _validate_hdhr(value):
+        from apps.hdhr.discovery import validate_device_id
+
+        errors = {}
+        device_id = value.get("hdhr_device_id")
+        if device_id:
+            device_id = str(device_id).strip().upper()
+            if not validate_device_id(device_id):
+                errors["hdhr_device_id"] = "Must be 8 hex digits with a valid HDHomeRun checksum (leave blank to auto-generate)"
+            value["hdhr_device_id"] = device_id
+        elif "hdhr_device_id" in value:
+            value["hdhr_device_id"] = ""
+        if "hdhr_tuner_count" in value:
+            tuner_count = value["hdhr_tuner_count"]
+            # None/"" = auto (calculate_tuner_count); otherwise clamp to the 1-byte tag range.
+            value["hdhr_tuner_count"] = (
+                None if tuner_count in (None, "") else _clamp_int(tuner_count, None, 1, 255)
+            )
+            if tuner_count not in (None, "") and value["hdhr_tuner_count"] is None:
+                errors["hdhr_tuner_count"] = "Tuner count must be an integer between 1 and 255"
+        name = value.get("hdhr_friendly_name")
+        if name is not None and len(str(name).strip()) > 64:
+            errors["hdhr_friendly_name"] = "Friendly name must be 64 characters or fewer"
+        if errors:
+            raise serializers.ValidationError({"value": errors})
+
 
 class ProxySettingsSerializer(serializers.Serializer):
     """Serializer for proxy settings stored as JSON in CoreSettings"""

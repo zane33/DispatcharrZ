@@ -66,10 +66,13 @@ vi.mock('../../components/ErrorBoundary', () => ({
 }));
 
 vi.mock('@mantine/core', async () => ({
+  Anchor: ({ children }) => <a>{children}</a>,
   Box: ({ children }) => <div>{children}</div>,
   Divider: () => <hr />,
   Loader: () => <div data-testid="loader">Loading...</div>,
+  NavLink: ({ label }) => <a>{label}</a>,
   Paper: ({ children }) => <div>{children}</div>,
+  Stack: ({ children }) => <div>{children}</div>,
   Text: ({ children }) => <span>{children}</span>,
 }));
 

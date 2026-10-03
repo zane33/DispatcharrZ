@@ -30,6 +30,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { CustomTable, useTable } from './CustomTable';
+import useIsMobile from '../../hooks/useIsMobile';
 import ConfirmationDialog from '../ConfirmationDialog';
 import { showNotification } from '../../utils/notificationUtils.js';
 import {
@@ -81,6 +82,7 @@ const LogoRowActions = ({ theme, row, editLogo, handleDeleteLogo }) => {
 
 const LogosTable = () => {
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
 
   /**
    * STORES
@@ -558,6 +560,9 @@ const LogosTable = () => {
 
   const table = useTable({
     columns,
+    state: isMobile
+      ? { columnVisibility: { url: false, channel_count: false } }
+      : undefined,
     data: paginatedData,
     allRowIds: paginatedData.map((logo) => logo.id),
     enablePagination: false, // Disable internal pagination since we're handling it manually
@@ -589,8 +594,8 @@ const LogosTable = () => {
           display: 'flex',
           justifyContent: 'center',
           padding: '0px',
-          minHeight: 'calc(100vh - 200px)',
-          minWidth: '900px',
+          minHeight: 'calc(100dvh - 200px)',
+          minWidth: isMobile ? 0 : 900,
         }}
       >
         <Stack gap="md" style={{ maxWidth: '1200px', width: '100%' }}>
@@ -607,6 +612,8 @@ const LogosTable = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: 12,
                 padding: '16px',
                 borderBottom: '1px solid #3f3f46',
               }}

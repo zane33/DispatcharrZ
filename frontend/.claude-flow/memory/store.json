@@ -1,0 +1,23 @@
+{
+  "entries": {
+    "cmd-1790987115983": {
+      "key": "cmd-1790987115983",
+      "value": "{\"command\":\"git status --short | head -80 && cd frontend && npm run build 2>&1 | tail -4 && npx vitest --run 2>&1 | tail -6\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:25:15.983Z",
+      "lastAccessed": "2026-10-03T00:25:15.983Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:25:15.983Z"
+    },
+    "cmd-1790987123654": {
+      "key": "cmd-1790987123654",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ && git diff docker/uwsgi.ini docker/docker-compose.yml dispatcharr/test_discovery.py && sed -n 1,60p apps/hdhr/discovery.py && git diff frontend/src/pages/Channels.jsx | head -80 && cat .gitignore | grep -n 'claude-flow\\\\|swarm\\\\|ruvector'\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:25:23.654Z",
+      "lastAccessed": "2026-10-03T00:25:23.654Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:25:23.654Z"
+    }
+  },
+  "version": "3.0.0"
+}

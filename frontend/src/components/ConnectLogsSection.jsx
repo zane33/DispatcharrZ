@@ -258,7 +258,7 @@ export default function ConnectLogsSection({ integrations }) {
               onChange={(value) =>
                 setFilters((prev) => ({ ...prev, integration: value }))
               }
-              style={{ width: 250 }}
+              style={{ flex: '1 1 160px', maxWidth: 250 }}
             />
           </Group>
           <Box
@@ -270,10 +270,10 @@ export default function ConnectLogsSection({ integrations }) {
               maxHeight: '50vh',
             }}
           >
-            <div style={{ minWidth: '900px', position: 'relative' }}>
+            <Box miw={{ base: 0, sm: 900 }} pos="relative">
               <LoadingOverlay visible={isLoading} />
               <CustomTable table={table} />
-            </div>
+            </Box>
           </Box>
           <Group gap={5} justify="center" p={8}>
             <Text size="xs">Page Size</Text>

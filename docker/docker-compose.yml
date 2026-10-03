@@ -12,6 +12,10 @@ services:
     restart: unless-stopped
     ports:
       - 9191:9191
+      # HDHomeRun discovery (Plex/Emby/Jellyfin auto-detect). Bridge networking does NOT
+      # forward LAN broadcasts into the container; use network_mode: host for auto-detect,
+      # otherwise add the tuner manually via http://<ip>:9191/hdhr/discover.json.
+      - 65001:65001/udp
     volumes:
       - ./data:/data
       #- ./certs:/certs:ro  # TLS certificates (optional)

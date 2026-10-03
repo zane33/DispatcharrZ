@@ -31,6 +31,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { CustomTable, useTable } from './CustomTable';
+import useIsMobile from '../../hooks/useIsMobile';
 import ConfirmationDialog from '../ConfirmationDialog';
 import useBrowserStorage from '../../hooks/useBrowserStorage';
 import { useDateTimeFormat, format } from '../../utils/dateTimeUtils.js';
@@ -134,6 +135,7 @@ const UserRowActions = ({ theme, row, editUser, handleDeleteUser }) => {
 
 const UsersTable = () => {
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
   const { fullDateFormat, fullDateTimeFormat } = useDateTimeFormat();
 
   /**
@@ -376,6 +378,18 @@ const UsersTable = () => {
 
   const table = useTable({
     columns,
+    state: isMobile
+      ? {
+          columnVisibility: {
+            name: false,
+            email: false,
+            date_joined: false,
+            last_login: false,
+            custom_properties: false,
+            channel_profiles: false,
+          },
+        }
+      : undefined,
     data,
     allRowIds: data.map((user) => user.id),
     enablePagination: false,
@@ -439,6 +453,7 @@ const UsersTable = () => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                flexWrap: 'wrap',
                 gap: '16px',
                 padding: '16px',
                 borderBottom: '1px solid #3f3f46',
@@ -448,7 +463,7 @@ const UsersTable = () => {
                 placeholder="Search users..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                w={250}
+                w={{ base: '100%', sm: 250 }}
                 size="xs"
                 leftSection={<Search size={16} />}
                 rightSection={
@@ -493,7 +508,7 @@ const UsersTable = () => {
                   '0 0 var(--mantine-radius-md) var(--mantine-radius-md)',
               }}
             >
-              <div style={{ minWidth: '900px' }}>
+              <Box miw={{ base: 0, sm: 900 }}>
                 <LoadingOverlay visible={isLoading} />
                 {data.length === 0 && users.length > 0 ? (
                   <Text size="xl" c="dimmed" ta="center" py="xl">
@@ -502,7 +517,7 @@ const UsersTable = () => {
                 ) : (
                   <CustomTable table={table} />
                 )}
-              </div>
+              </Box>
             </Box>
           </Paper>
         </Stack>

@@ -31,6 +31,10 @@ const GROUP_CONFIG = {
       m3u_hash_key: { type: 'm3u_hash_key', default: [] },
       default_output_format: { type: 'string', default: 'mpegts' },
       hdhr_output_profile_id: { type: 'id' },
+      hdhr_discovery_enabled: { type: 'bool', default: true },
+      hdhr_friendly_name: { type: 'string', default: 'Dispatcharr HDHomeRun' },
+      hdhr_device_id: { type: 'string', default: '' },
+      hdhr_tuner_count: { type: 'id' }, // nullable int; null = auto
     },
   },
   epg_settings: {

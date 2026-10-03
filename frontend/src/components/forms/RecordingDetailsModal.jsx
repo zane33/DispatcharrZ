@@ -464,7 +464,11 @@ const RecordingDetailsModal = ({
 
   const Movie = () => {
     return (
-      <Flex gap="lg" align="flex-start">
+      <Flex
+        gap="lg"
+        align={{ base: 'center', sm: 'flex-start' }}
+        direction={{ base: 'column', sm: 'row' }}
+      >
         <Stack gap={4} align="center">
           <Image
             src={livePosterUrl}

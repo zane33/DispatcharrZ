@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from apps.accounts.permissions import Authenticated, permission_classes_by_action
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
 import logging
+from xml.sax.saxutils import escape
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 from django.shortcuts import get_object_or_404
@@ -64,39 +65,25 @@ class DiscoverAPIView(APIView):
             uri_parts.append(str(output_profile_id))
 
         base_url = build_absolute_uri_with_port(request, f'/{"/".join(uri_parts)}/').rstrip("/")
-        device = HDHRDevice.objects.first()
 
-        from apps.m3u.utils import calculate_tuner_count
-        tuner_count = calculate_tuner_count(minimum=1, unlimited_default=10)
+        from core.models import CoreSettings
+        hdhr = CoreSettings.get_hdhr_settings()
 
         slug_parts = [p for p in [channel_profile, str(output_profile_id) if output_profile_id is not None else None] if p]
-        device_ID = f"dispatcharr-hdhr-{'-'.join(slug_parts)}" if slug_parts else "12345678"
-        friendly_name = f"Dispatcharr HDHomeRun - {' / '.join(slug_parts)}" if slug_parts else "Dispatcharr HDHomeRun"
+        device_ID = f"{hdhr['device_id']}-{'-'.join(slug_parts)}" if slug_parts else hdhr["device_id"]
+        friendly_name = f"{hdhr['friendly_name']} - {' / '.join(slug_parts)}" if slug_parts else hdhr["friendly_name"]
 
-        if not device:
-            data = {
-                "FriendlyName": friendly_name,
-                "ModelNumber": "HDTC-2US",
-                "FirmwareName": "hdhomerun3_atsc",
-                "FirmwareVersion": "20200101",
-                "DeviceID": device_ID,
-                "DeviceAuth": "test_auth_token",
-                "BaseURL": base_url,
-                "LineupURL": f"{base_url}/lineup.json",
-                "TunerCount": tuner_count,
-            }
-        else:
-            data = {
-                "FriendlyName": device.friendly_name,
-                "ModelNumber": "HDTC-2US",
-                "FirmwareName": "hdhomerun3_atsc",
-                "FirmwareVersion": "20200101",
-                "DeviceID": device.device_id,
-                "DeviceAuth": "test_auth_token",
-                "BaseURL": base_url,
-                "LineupURL": f"{base_url}/lineup.json",
-                "TunerCount": tuner_count,
-            }
+        data = {
+            "FriendlyName": friendly_name,
+            "ModelNumber": "HDTC-2US",
+            "FirmwareName": "hdhomerun3_atsc",
+            "FirmwareVersion": "20200101",
+            "DeviceID": device_ID,
+            "DeviceAuth": "test_auth_token",
+            "BaseURL": base_url,
+            "LineupURL": f"{base_url}/lineup.json",
+            "TunerCount": hdhr["tuner_count"],
+        }
         return JsonResponse(data)
 
 
@@ -219,10 +206,13 @@ class HDHRDeviceXMLAPIView(APIView):
 
         base_url = build_absolute_uri_with_port(request, "/hdhr/").rstrip("/")
 
+        from core.models import CoreSettings
+        hdhr = CoreSettings.get_hdhr_settings()
+
         xml_response = f"""<?xml version="1.0" encoding="utf-8"?>
         <root>
-            <DeviceID>12345678</DeviceID>
-            <FriendlyName>Dispatcharr HDHomeRun</FriendlyName>
+            <DeviceID>{hdhr["device_id"]}</DeviceID>
+            <FriendlyName>{escape(hdhr["friendly_name"])}</FriendlyName>
             <ModelNumber>HDTC-2US</ModelNumber>
             <FirmwareName>hdhomerun3_atsc</FirmwareName>
             <FirmwareVersion>20200101</FirmwareVersion>

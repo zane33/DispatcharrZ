@@ -132,14 +132,41 @@ vi.mock('@mantine/core', () => ({
       </select>
     </div>
   ),
-  Switch: ({ id, ...rest }) => (
-    <input
-      data-testid={id}
-      id={id}
-      type="checkbox"
-      checked={rest.checked ?? false}
-      onChange={(e) => rest.onChange?.(e)}
-    />
+  Switch: ({ id, label, ...rest }) => (
+    <div>
+      <label htmlFor={id}>{label}</label>
+      <input
+        data-testid={id}
+        id={id}
+        type="checkbox"
+        checked={rest.checked ?? false}
+        onChange={(e) => rest.onChange?.(e)}
+      />
+    </div>
+  ),
+  TextInput: ({ id, label, description, ...rest }) => (
+    <div>
+      <label htmlFor={id}>{label}</label>
+      <input
+        data-testid={id}
+        id={id}
+        value={rest.value ?? ''}
+        onChange={(e) => rest.onChange?.(e)}
+      />
+    </div>
+  ),
+  NumberInput: ({ id, label, description, ...rest }) => (
+    <div>
+      <label htmlFor={id}>{label}</label>
+      {description && <span data-testid={`desc-${id}`}>{description}</span>}
+      <input
+        data-testid={id}
+        id={id}
+        type="number"
+        value={rest.value ?? ''}
+        onChange={(e) => rest.onChange?.(e.target.value)}
+      />
+    </div>
   ),
   Text: ({ children, size, fw }) => (
     <span data-size={size} data-fw={fw}>
@@ -176,6 +203,10 @@ const mockFormValues = {
   default_stream_profile: '2',
   m3u_hash_key: ['name'],
   hdhr_output_profile_id: null,
+  hdhr_discovery_enabled: true,
+  hdhr_friendly_name: 'Dispatcharr HDHomeRun',
+  hdhr_device_id: '',
+  hdhr_tuner_count: null,
 };
 
 const makeFormMock = (overrides = {}) => ({
@@ -307,6 +338,44 @@ describe('StreamSettingsForm', () => {
       render(<StreamSettingsForm active={true} />);
       expect(screen.getByText('Default')).toBeInTheDocument();
       expect(screen.getByText('HLS')).toBeInTheDocument();
+    });
+
+    it('renders the HDHomeRun discovery fields', () => {
+      render(<StreamSettingsForm active={true} />);
+      expect(screen.getByTestId('hdhr_discovery_enabled')).toBeChecked();
+      expect(screen.getByTestId('hdhr_friendly_name')).toHaveValue(
+        'Dispatcharr HDHomeRun'
+      );
+      expect(screen.getByTestId('hdhr_device_id')).toHaveValue('');
+      expect(screen.getByTestId('hdhr_tuner_count')).toHaveValue(null);
+      expect(screen.getByTestId('desc-hdhr_tuner_count')).toHaveTextContent(
+        /Blank = auto/
+      );
+    });
+
+    it('stores tuner count as a number and blank as null', () => {
+      const setFieldValue = vi.fn();
+      ({ formMock } = setupMocks({ formOverrides: { setFieldValue } }));
+      render(<StreamSettingsForm active={true} />);
+      fireEvent.change(screen.getByTestId('hdhr_tuner_count'), {
+        target: { value: '6' },
+      });
+      expect(setFieldValue).toHaveBeenCalledWith('hdhr_tuner_count', 6);
+    });
+
+    it('stores a cleared tuner count as null (auto)', () => {
+      const setFieldValue = vi.fn();
+      ({ formMock } = setupMocks({
+        formOverrides: {
+          setFieldValue,
+          values: { ...mockFormValues, hdhr_tuner_count: 3 },
+        },
+      }));
+      render(<StreamSettingsForm active={true} />);
+      fireEvent.change(screen.getByTestId('hdhr_tuner_count'), {
+        target: { value: '' },
+      });
+      expect(setFieldValue).toHaveBeenCalledWith('hdhr_tuner_count', null);
     });
 
     it('does not show success alert on initial render', () => {

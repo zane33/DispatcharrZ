@@ -172,7 +172,7 @@ export default function CronBuilder({
                 <Text size="sm" fw={500} mb="xs">
                   Quick Presets
                 </Text>
-                <SimpleGrid cols={3} spacing="xs">
+                <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="xs">
                   {PRESETS.map((preset) => (
                     <Preset
                       key={preset.value}
@@ -190,7 +190,7 @@ export default function CronBuilder({
                 <Text size="sm" fw={500} mb="xs">
                   Custom Schedule
                 </Text>
-                <SimpleGrid cols={2} spacing="sm">
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                   <Select
                     label="Frequency"
                     data={FREQUENCY_OPTIONS}

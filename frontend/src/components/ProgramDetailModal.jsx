@@ -167,7 +167,7 @@ export default function ProgramDetailModal({
       zIndex={9999}
     >
       <Stack gap="md">
-        <Flex gap="md" align="stretch">
+        <Flex gap="md" align="stretch" direction={{ base: 'column', sm: 'row' }}>
           {posterUrl && (
             <Image
               src={posterUrl}

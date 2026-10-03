@@ -816,7 +816,7 @@ const LogFileViewPage = () => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          height: 'calc(100vh - var(--mantine-spacing-md) * 2)',
+          height: 'calc(100dvh - var(--mantine-spacing-md) * 2)',
           overflow: 'hidden',
         }}
       >

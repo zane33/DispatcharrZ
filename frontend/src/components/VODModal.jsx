@@ -390,7 +390,7 @@ const VODModal = ({ vod, opened, onClose }) => {
               )}
 
               {/* Movie poster and basic info */}
-              <Flex gap="md">
+              <Flex gap="md" direction={{ base: 'column', sm: 'row' }}>
                 {/* Use movie_image or logo */}
                 {displayVOD.movie_image ||
                 displayVOD.logo?.cache_url ||

@@ -1,12 +1,13 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import ChannelsTable from '../components/tables/ChannelsTable';
 import StreamsTable from '../components/tables/StreamsTable';
-import { Box } from '@mantine/core';
+import { Box, SegmentedControl, Stack } from '@mantine/core';
 import { Allotment } from 'allotment';
 import { USER_LEVELS } from '../constants';
 import useAuthStore from '../store/auth';
 import useLogosStore from '../store/logos';
 import useBrowserStorage from '../hooks/useBrowserStorage';
+import useIsMobile from '../hooks/useIsMobile';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 const PageContent = () => {
@@ -15,6 +16,8 @@ const PageContent = () => {
     (s) => s.fetchChannelAssignableLogos
   );
   const enableLogoRendering = useLogosStore((s) => s.enableLogoRendering);
+  const isMobile = useIsMobile();
+  const [mobileTab, setMobileTab] = useState('channels');
 
   const channelsReady = useRef(false);
   const streamsReady = useRef(false);
@@ -70,6 +73,40 @@ const PageContent = () => {
       <Box style={{ padding: 10 }}>
         <ChannelsTable onReady={handleChannelsReady} />
       </Box>
+    );
+  }
+
+  if (isMobile) {
+    // One table at a time; both stay mounted so onReady/logo loading still fires.
+    const show = (tab) => ({
+      display: mobileTab === tab ? 'flex' : 'none',
+      flexDirection: 'column',
+      flex: 1,
+      minHeight: 0,
+    });
+    return (
+      <Stack
+        gap="xs"
+        p="xs"
+        h="calc(100dvh - var(--app-shell-header-offset, 0px))"
+        style={{ overflow: 'hidden' }}
+      >
+        <SegmentedControl
+          fullWidth
+          value={mobileTab}
+          onChange={setMobileTab}
+          data={[
+            { label: 'Channels', value: 'channels' },
+            { label: 'Streams', value: 'streams' },
+          ]}
+        />
+        <Box style={show('channels')}>
+          <ChannelsTable onReady={handleChannelsReady} />
+        </Box>
+        <Box style={show('streams')}>
+          <StreamsTable onReady={handleStreamsReady} />
+        </Box>
+      </Stack>
     );
   }
 

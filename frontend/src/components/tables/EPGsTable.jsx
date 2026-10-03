@@ -36,6 +36,7 @@ import useBrowserStorage from '../../hooks/useBrowserStorage';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import useWarningsStore from '../../store/warnings';
 import { CustomTable, useTable } from './CustomTable';
+import useIsMobile from '../../hooks/useIsMobile';
 import { showNotification } from '../../utils/notificationUtils.js';
 import {
   deleteEpg,
@@ -219,6 +220,7 @@ const EPGsTable = () => {
   const epgs = useEPGsStore((s) => s.epgs);
 
   const theme = useMantineTheme();
+  const isMobile = useIsMobile();
   const { fullDateTimeFormat } = useDateTimeFormat();
   const [tableSize] = useBrowserStorage('table-size', 'default');
   const [typeFilter, setTypeFilter] = useBrowserStorage(
@@ -511,6 +513,17 @@ const EPGsTable = () => {
 
   const table = useTable({
     columns,
+    state: isMobile
+      ? {
+          columnVisibility: {
+            source_type: false,
+            url: false,
+            last_message: false,
+            updated_at: false,
+            is_active: false,
+          },
+        }
+      : undefined,
     data: filteredData,
     allRowIds: filteredData.map((epg) => epg.id),
     enablePagination: false,
@@ -556,6 +569,7 @@ const EPGsTable = () => {
           flexShrink: 0,
         }}
         gap={15}
+        wrap="wrap"
       >
         <Text
           h={24}

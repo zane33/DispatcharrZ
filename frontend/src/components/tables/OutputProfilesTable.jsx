@@ -277,9 +277,9 @@ const OutputProfiles = () => {
             borderRadius: 'var(--mantine-radius-default)',
           }}
         >
-          <div style={{ minWidth: 600 }}>
+          <Box miw={{ base: 0, sm: 600 }}>
             <CustomTable table={table} />
-          </div>
+          </Box>
         </Box>
       </Box>
 

@@ -20,6 +20,7 @@ import { useDisclosure } from '@mantine/hooks';
 import useAuthStore from '../store/auth';
 import useVODStore from '../store/useVODStore';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
+import useIsMobile from '../hooks/useIsMobile';
 import {
   filterCategoriesToEnabled,
   getCategoryOptions,
@@ -103,6 +104,7 @@ const VODsPage = () => {
     useDisclosure(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const columns = useCardColumns();
+  const isMobile = useIsMobile();
   const [categories, setCategories] = useState({});
 
   const typeOptions = useMemo(() => {
@@ -217,7 +219,7 @@ const VODsPage = () => {
             icon={<Search size={16} />}
             value={filters.search}
             onChange={(e) => setFilters({ search: e.target.value })}
-            miw={200}
+            style={{ flex: '1 1 200px' }}
           />
 
           <Select
@@ -277,6 +279,7 @@ const VODsPage = () => {
                   page={currentPage}
                   onChange={setPage}
                   total={totalPages}
+                  siblings={isMobile ? 0 : 1}
                 />
               </Flex>
             )}
