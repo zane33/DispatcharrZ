@@ -1,0 +1,725 @@
+{
+  "entries": {
+    "cmd-1790985552084": {
+      "key": "cmd-1790985552084",
+      "value": "{\"command\":\"ls && cat CLAUDE.md 2>/dev/null | head -80 && ls frontend/src frontend/src/pages frontend/src/components 2>/dev/null | head -80 && grep -ril \\\"hdhr\\\\|hdhomerun\\\" --include=*.py --include=*.js --include=*.jsx -l . | grep -v node_modules | head -40\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-02T23:59:12.084Z",
+      "lastAccessed": "2026-10-02T23:59:12.084Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-01T23:59:12.084Z"
+    },
+    "cmd-1790985562730": {
+      "key": "cmd-1790985562730",
+      "value": "{\"command\":\"grep -ril 'hdhr\\\\|hdhomerun' apps core dispatcharr docker frontend/src --include='*.py' --include='*.jsx' --include='*.js' --include='*.yml' --include='*.conf' --include='*.sh' | head -40; echo ---; ls apps; echo ---; ls apps/hdhr 2>/dev/null; echo ---; cat docker/docker-compose*.yml 2>/dev/null | head -60; echo ---; ls docker; echo --- ; git log --oneline -5 -- frontend/src/pages/Channels.jsx; wc -l frontend/src/pages/Channels.jsx frontend/src/components/tables/*.jsx frontend/src/components/Sidebar.jsx frontend/src/App.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-02T23:59:22.730Z",
+      "lastAccessed": "2026-10-02T23:59:22.730Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-01T23:59:22.730Z"
+    },
+    "cmd-1790985571541": {
+      "key": "cmd-1790985571541",
+      "value": "{\"command\":\"cat apps/hdhr/models.py apps/hdhr/urls.py apps/hdhr/api_urls.py; echo ---VIEWS; cat apps/hdhr/api_views.py; echo ---SETTINGS; grep -n -i 'hdhr\\\\|ssdp\\\\|1900\\\\|65001' dispatcharr/settings.py dispatcharr/urls.py docker/nginx.conf docker/entrypoint*.sh docker/docker-compose.yml core/models.py; echo ---DISC; cat dispatcharr/test_discovery.py | head -40; echo ---PAGES; cat frontend/src/pages/Channels.jsx; echo ---APP; sed -n 1,218p frontend/src/App.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-02T23:59:31.541Z",
+      "lastAccessed": "2026-10-02T23:59:31.541Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-01T23:59:31.541Z"
+    },
+    "cmd-1790985589176": {
+      "key": "cmd-1790985589176",
+      "value": "{\"command\":\"grep -n -A30 'def calculate_tuner_count' apps/m3u/utils.py | head -50; echo ---SIDEBAR; sed -n 1,80p frontend/src/components/Sidebar.jsx; grep -n 'useMediaQuery\\\\|breakpoint\\\\|hiddenFrom\\\\|visibleFrom\\\\|@media\\\\|Burger' -r frontend/src --include=*.jsx --include=*.css | grep -v __tests__ | head -40; echo ---SETTINGS; grep -n -i 'hdhr' frontend/src/components/forms/settings/StreamSettingsForm.jsx frontend/src/utils/forms/settings/StreamSettingsFormUtils.js | head -20; echo ---LIVE; curl -s -m5 http://192.168.3.148:9191/hdhr/discover.json; echo; curl -s -m5 -o /dev/null -w '%{http_code}\\\\n' http://192.168.3.148:9191/hdhr/lineup.json; docker ps 2>/dev/null | head; cat frontend/package.json | grep -n '\\\"@mantine\\\\|\\\"react\\\"\\\\|\\\"allotment\\\\|\\\"mantine-react-table\\\\|\\\"vite' \",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-02T23:59:49.176Z",
+      "lastAccessed": "2026-10-02T23:59:49.176Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-01T23:59:49.176Z"
+    },
+    "cmd-1790985772178": {
+      "key": "cmd-1790985772178",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && ls src src/hooks src/components src/components/tables src/pages 2>/dev/null; wc -l src/App.jsx src/components/Sidebar.jsx src/components/sidebar.css src/components/SlidingPanels.jsx src/pages/Channels.jsx src/components/tables/ChannelsTable.jsx src/components/tables/StreamsTable.jsx src/components/tables/ChannelTableStreams.jsx src/components/FloatingVideo.jsx src/components/NotificationCenter.jsx index.html src/index.css src/App.css vite.config.js; grep -n viewport index.html; cat vite.config.js\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:02:52.178Z",
+      "lastAccessed": "2026-10-03T00:02:52.178Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:02:52.178Z"
+    },
+    "cmd-1790985778787": {
+      "key": "cmd-1790985778787",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat src/App.jsx src/pages/Channels.jsx src/components/SlidingPanels.jsx src/components/sidebar.css src/App.css src/index.css\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:02:58.787Z",
+      "lastAccessed": "2026-10-03T00:02:58.787Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:02:58.787Z"
+    },
+    "cmd-1790985787726": {
+      "key": "cmd-1790985787726",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat > src/hooks/useIsMobile.js <<'EOF'\\nimport { useMediaQuery } from '@mantine/hooks';\\n\\n// Shared breakpoint: true below Mantine's `sm` (48em / 768px).\\n// Pair with `hiddenFrom=\\\"sm\\\"` / `visibleFrom=\\\"sm\\\"` for CSS-only cases.\\nexport default function useIsMobile() {\\n  return useMediaQuery('(max-width: 48em)');\\n}\\nEOF\\ncat src/components/Sidebar.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:07.726Z",
+      "lastAccessed": "2026-10-03T00:03:07.726Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:07.726Z"
+    },
+    "cmd-1790985791529": {
+      "key": "cmd-1790985791529",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && ls src src/pages src/components src/components/tables src/components/cards src/components/modals src/components/forms src/hooks 2>/dev/null; cat vite.config.js; cat package.json | head -60; wc -l src/pages/*.jsx src/pages/guide.css\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:11.529Z",
+      "lastAccessed": "2026-10-03T00:03:11.529Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:11.529Z"
+    },
+    "cmd-1790985799389": {
+      "key": "cmd-1790985799389",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -nE \\\"renderTopToolbar|renderBottomToolbar|HDHR|M3U URL|EPG URL|copyToClipboard|layoutMode|enableColumnResizing|mantineTableContainerProps|mantinePaperProps|columnVisibility|enableRowActions|renderRowActions|positionActionsColumn|useMantineReactTable|return \\\\(|Pagination|<Box|<Group|<Flex|<Paper|<Stack|useBrowserStorage|useTablePreferences|CustomTable|minWidth|maxHeight|height:|size: ?[0-9]\\\" src/components/tables/ChannelsTable.jsx | head -150\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:19.389Z",
+      "lastAccessed": "2026-10-03T00:03:19.389Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:19.389Z"
+    },
+    "cmd-1790985799926": {
+      "key": "cmd-1790985799926",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat src/hooks/useIsMobile.js; echo ---; cat src/pages/guide.css; echo ---; cat src/pages/Settings.jsx src/pages/ContentSources.jsx src/pages/Users.jsx src/pages/Logos.jsx src/pages/Login.jsx; echo ---; git status --short; ls src/components/forms/settings src/components/tables/CustomTable\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:19.926Z",
+      "lastAccessed": "2026-10-03T00:03:19.926Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:19.926Z"
+    },
+    "cmd-1790985807659": {
+      "key": "cmd-1790985807659",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 1,200p src/pages/Guide.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:27.659Z",
+      "lastAccessed": "2026-10-03T00:03:27.659Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:27.659Z"
+    },
+    "cmd-1790985813647": {
+      "key": "cmd-1790985813647",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 1400,1480p src/components/tables/ChannelsTable.jsx; echo \\\"#####\\\"; sed -n 1590,1620p src/components/tables/ChannelsTable.jsx; echo \\\"#####\\\"; sed -n 1690,1865p src/components/tables/ChannelsTable.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:33.647Z",
+      "lastAccessed": "2026-10-03T00:03:33.647Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:33.647Z"
+    },
+    "cmd-1790985814769": {
+      "key": "cmd-1790985814769",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"return (\\\" src/pages/Guide.jsx | tail -3; awk 'NR>=1270' src/pages/Guide.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:34.769Z",
+      "lastAccessed": "2026-10-03T00:03:34.769Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:34.769Z"
+    },
+    "cmd-1790985824520": {
+      "key": "cmd-1790985824520",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat src/components/GuideRow.jsx src/components/HourTimeline.jsx; grep -n \\\"CHANNEL_WIDTH\\\\|HOUR_WIDTH\\\\|PROGRAM_HEIGHT\\\\|MINUTE_BLOCK_WIDTH\\\\|PROGRAM_GAP_PX\\\\|EXPANDED_PROGRAM_HEIGHT\\\" src/utils/guideUtils.js | head -20; grep -rn \\\"CHANNEL_WIDTH\\\" src --include=*.jsx --include=*.js -l\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:44.520Z",
+      "lastAccessed": "2026-10-03T00:03:44.520Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:44.520Z"
+    },
+    "cmd-1790985824765": {
+      "key": "cmd-1790985824765",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && ls src/components/tables/ChannelsTable src/components/tables/CustomTable; wc -l src/components/tables/ChannelsTable/*.jsx src/components/tables/CustomTable/*; echo \\\"#####HEADER\\\"; cat src/components/tables/ChannelsTable/ChannelTableHeader.jsx 2>/dev/null || cat src/components/tables/ChannelsTable/*Header*.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:44.765Z",
+      "lastAccessed": "2026-10-03T00:03:44.765Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:44.765Z"
+    },
+    "cmd-1790985829864": {
+      "key": "cmd-1790985829864",
+      "value": "{\"command\":\"ls apps/hdhr/ && cat apps/hdhr/api_views.py apps/hdhr/urls.py apps/hdhr/api_urls.py 2>/dev/null; cat apps/hdhr/models.py\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:49.864Z",
+      "lastAccessed": "2026-10-03T00:03:49.864Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:49.864Z"
+    },
+    "cmd-1790985835726": {
+      "key": "cmd-1790985835726",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"handleTimelineScroll\\\\|handleTimelineWheel\\\\|onScroll\\\\|addEventListener\\\\|guideRef.current\\\" src/pages/Guide.jsx | head -40; sed -n 1165,1200p src/pages/Guide.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:55.726Z",
+      "lastAccessed": "2026-10-03T00:03:55.726Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:55.726Z"
+    },
+    "cmd-1790985837653": {
+      "key": "cmd-1790985837653",
+      "value": "{\"command\":\"grep -rn \\\"hdhr_output_profile_id\\\\|get_hdhr_output_profile_id\\\" --include=*.py --include=*.js --include=*.jsx . | grep -v node_modules | grep -v __pycache__\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:57.653Z",
+      "lastAccessed": "2026-10-03T00:03:57.653Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:57.653Z"
+    },
+    "cmd-1790985839585": {
+      "key": "cmd-1790985839585",
+      "value": "{\"command\":\"grep -n \\\"def build_absolute_uri_with_port\\\" -A 60 core/utils.py; grep -rn \\\"public_url\\\\|PUBLIC_URL\\\\|base_url\\\\b\\\" core/models.py core/utils.py dispatcharr/settings.py | head -30\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:03:59.585Z",
+      "lastAccessed": "2026-10-03T00:03:59.585Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:03:59.585Z"
+    },
+    "cmd-1790985842069": {
+      "key": "cmd-1790985842069",
+      "value": "{\"command\":\"ls docker/ && cat docker/entrypoint.aio.sh docker/entrypoint.sh && cat docker/docker-compose*.yml && cat dispatcharr/test_discovery.py && ls apps/output/tests apps/hdhr/ 2>/dev/null; ls scripts/; grep -n \\\"calculate_tuner_count\\\" -A 30 apps/m3u/utils.py | head -60\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:02.069Z",
+      "lastAccessed": "2026-10-03T00:04:02.069Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:02.069Z"
+    },
+    "cmd-1790985843675": {
+      "key": "cmd-1790985843675",
+      "value": "{\"command\":\"cat frontend/src/components/forms/settings/StreamSettingsForm.jsx frontend/src/utils/forms/settings/StreamSettingsFormUtils.js; ls frontend/src/components/forms/settings/__tests__ frontend/src/utils/forms/settings/__tests__\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:03.675Z",
+      "lastAccessed": "2026-10-03T00:04:03.675Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:03.675Z"
+    },
+    "cmd-1790985847796": {
+      "key": "cmd-1790985847796",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -nE \\\"width|minWidth|overflow|fillHeight|height|headerPinned|position\\\" src/components/tables/CustomTable/index.jsx src/components/tables/CustomTable/CustomTable.jsx src/components/tables/CustomTable/CustomTableHeader.jsx src/components/tables/CustomTable/CustomTableBody.jsx | head -80; echo \\\"#####STREAMS\\\"; grep -nE \\\"return \\\\(|<Paper|<Flex|<Group|height:|calc\\\\(|minWidth|Pagination|Text$|Streams$|<Menu|<Button|<ActionIcon|<Select|<TextInput|useBrowserStorage\\\" src/components/tables/StreamsTable.jsx | sed -n 1,200p | awk -F: '$1>1400'\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:07.796Z",
+      "lastAccessed": "2026-10-03T00:04:07.796Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:07.796Z"
+    },
+    "cmd-1790985848798": {
+      "key": "cmd-1790985848798",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 530,720p src/pages/Guide.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:08.798Z",
+      "lastAccessed": "2026-10-03T00:04:08.798Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:08.798Z"
+    },
+    "cmd-1790985852202": {
+      "key": "cmd-1790985852202",
+      "value": "{\"command\":\"grep -rn 'hdhr_output_profile_id\\\\|get_hdhr_output_profile_id' core apps frontend/src dispatcharr docs 2>/dev/null | grep -v node_modules\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:12.202Z",
+      "lastAccessed": "2026-10-03T00:04:12.202Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:12.202Z"
+    },
+    "cmd-1790985854641": {
+      "key": "cmd-1790985854641",
+      "value": "{\"command\":\"cat /Users/zane/.claude/projects/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/tool-results/bxq63z2m3.txt\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:14.641Z",
+      "lastAccessed": "2026-10-03T00:04:14.641Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:14.641Z"
+    },
+    "cmd-1790985856681": {
+      "key": "cmd-1790985856681",
+      "value": "{\"command\":\"cat frontend/src/components/forms/settings/__tests__/StreamSettingsForm.test.jsx frontend/src/utils/forms/settings/__tests__/StreamSettingsFormUtils.test.js; grep -n \\\"_resolve_host_port_scheme\\\" -A 50 core/utils.py | head -80\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:16.681Z",
+      "lastAccessed": "2026-10-03T00:04:16.681Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:16.681Z"
+    },
+    "cmd-1790985859059": {
+      "key": "cmd-1790985859059",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 1,70p src/components/tables/CustomTable/CustomTable.jsx; echo \\\"#####STREAMS 1493-1600\\\"; sed -n 1493,1600p src/components/tables/StreamsTable.jsx; echo \\\"#####STREAMS 1740-1860\\\"; sed -n 1740,1870p src/components/tables/StreamsTable.jsx; echo \\\"#####STREAMS columns\\\"; grep -nE \\\"^\\\\s+(id|accessorKey|size|header): \\\" src/components/tables/StreamsTable.jsx | awk -F: '$1>900 && $1<1300'; grep -nE \\\"columnVisibility|hiddenColumns|toggleColumn|STREAMS_COLUMNS|localStorage\\\" src/components/tables/StreamsTable.jsx | head -20; echo \\\"####TESTS\\\"; ls src/__tests__ src/pages/__tests__ src/components/__tests__ src/components/tables/__tests__ src/hooks/__tests__ 2>/dev/null\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:19.059Z",
+      "lastAccessed": "2026-10-03T00:04:19.059Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:19.059Z"
+    },
+    "cmd-1790985870757": {
+      "key": "cmd-1790985870757",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat src/test/setupTests.js; echo \\\"#####CHTEST\\\"; cat src/pages/__tests__/Channels.test.jsx; echo \\\"#####SIDEBARTEST head\\\"; sed -n 1,80p src/components/__tests__/Sidebar.test.jsx; echo \\\"#####STREAMS colvis\\\"; sed -n 320,400p src/components/tables/StreamsTable.jsx; echo \\\"#####CUSTOMTABLE colvis\\\"; grep -n \\\"columnVisibility\\\\|getVisibleFlatColumns\\\\|getIsVisible\\\" src/components/tables/CustomTable/index.jsx; echo \\\"#####CHANNELS cols\\\"; sed -n 985,1000p src/components/tables/ChannelsTable.jsx; grep -nE \\\"^\\\\s+(id|accessorKey|header): \\\" src/components/tables/ChannelsTable.jsx | awk -F: '$1>980 && $1<1300'\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:30.757Z",
+      "lastAccessed": "2026-10-03T00:04:30.757Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:30.757Z"
+    },
+    "cmd-1790985871375": {
+      "key": "cmd-1790985871375",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -rn \\\"100vh\\\\|minWidth\\\\|miw=\\\\|w={'[0-9]\\\\|w=\\\\\\\"[0-9]\\\\|width: [0-9]\\\\{3\\\\}\\\\|maxWidth: [0-9]\\\\|size=\\\\\\\"[0-9]\\\\|size={[0-9]\\\\{3\\\\}\\\\|size=\\\\\\\"xl\\\\\\\"\\\\|size=\\\\\\\"lg\\\\\\\"\\\\|fullScreen\\\" src/pages src/components --include=*.jsx | grep -v \\\"ChannelsTable\\\\|StreamsTable\\\\|ChannelTableStreams\\\\|Channels.jsx\\\\|Sidebar\\\\|SlidingPanels\\\\|StreamSettingsForm\\\\|__tests__\\\\|App.jsx\\\" | grep -v \\\"size=\\\\\\\"lg\\\\\\\" *fw\\\\|Text size\\\\|Title\\\" \",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:31.375Z",
+      "lastAccessed": "2026-10-03T00:04:31.375Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:31.375Z"
+    },
+    "cmd-1790985879986": {
+      "key": "cmd-1790985879986",
+      "value": "{\"command\":\"sed -n 60,400p docker/entrypoint.aio.sh | grep -n \\\"celery\\\\|uwsgi\\\\|daphne\\\\|nginx\\\\|pids+=\\\\|manage.py\\\\|beat\\\\|wait\\\\|exec\\\" \",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:39.986Z",
+      "lastAccessed": "2026-10-03T00:04:39.986Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:39.986Z"
+    },
+    "cmd-1790985881841": {
+      "key": "cmd-1790985881841",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -rn -e \\\"100vh\\\" -e \\\"minWidth\\\" -e \\\"miw=\\\" -e \\\"w={'[0-9]\\\" -e \\\"w={[0-9]\\\" -e \\\"width: [0-9]\\\\{3\\\\}\\\" -e \\\"maxWidth: [0-9]\\\" -e \\\"fullScreen\\\" -e \\\"Modal\\\" src/pages src/components | grep -v -e \\\"ChannelsTable\\\" -e \\\"StreamsTable\\\" -e \\\"ChannelTableStreams\\\" -e \\\"Channels.jsx\\\" -e \\\"Sidebar\\\" -e \\\"SlidingPanels\\\" -e \\\"StreamSettingsForm\\\" -e \\\"__tests__\\\" -e \\\"App.jsx\\\" -e \\\"import\\\" | grep -v \\\"Modal.jsx:.*<Modal\\\" | head -150\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:41.841Z",
+      "lastAccessed": "2026-10-03T00:04:41.841Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:41.841Z"
+    },
+    "cmd-1790985882856": {
+      "key": "cmd-1790985882856",
+      "value": "{\"command\":\"cat docker/entrypoint.sh | grep -n \\\"celery\\\\|uwsgi\\\\|daphne\\\\|nginx\\\\|pids+=\\\\|manage.py\\\\|beat\\\\|exec\\\\|DISPATCHARR_ENV\\\\|^fi\\\\|^if\\\"; echo ---CELERY; cat docker/entrypoint.celery.sh; echo ---COMPOSE; cat docker/docker-compose.yml; echo ---AIO; cat docker/docker-compose.aio.yml; echo ---UWSGI; cat docker/uwsgi.ini | head -40\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:42.856Z",
+      "lastAccessed": "2026-10-03T00:04:42.856Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:42.856Z"
+    },
+    "cmd-1790985884466": {
+      "key": "cmd-1790985884466",
+      "value": "{\"command\":\"cat dispatcharr/test_discovery.py; ls apps/output/tests apps/hdhr; grep -n \\\"def calculate_tuner_count\\\" -A 40 apps/m3u/utils.py\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:44.466Z",
+      "lastAccessed": "2026-10-03T00:04:44.466Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:44.466Z"
+    },
+    "cmd-1790985886068": {
+      "key": "cmd-1790985886068",
+      "value": "{\"command\":\"sed -n 200,260p core/models.py; sed -n 470,520p core/models.py; sed -n 780,830p core/models.py; grep -n \\\"_resolve_host_port_scheme\\\" -A 45 core/utils.py | head -70\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:46.068Z",
+      "lastAccessed": "2026-10-03T00:04:46.068Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:46.068Z"
+    },
+    "cmd-1790985888094": {
+      "key": "cmd-1790985888094",
+      "value": "{\"command\":\"grep -rn \\\"stream_settings\\\" core/api_views.py core/serializers.py core/api_urls.py 2>/dev/null | head -20; grep -rn \\\"def validate\\\\|hdhr\\\\|STREAM_SETTINGS\\\" core/serializers.py | head -20; grep -rln \\\"stream_settings\\\" core apps --include=*.py | head\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:48.094Z",
+      "lastAccessed": "2026-10-03T00:04:48.094Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:48.094Z"
+    },
+    "cmd-1790985890914": {
+      "key": "cmd-1790985890914",
+      "value": "{\"command\":\"sed -n 1,60p frontend/src/utils/forms/settings/__tests__/StreamSettingsFormUtils.test.js; grep -n \\\"hdhr\\\\|outputProfiles\\\\|HDHR\\\\|getByLabelText\\\\|TextInput\\\\|NumberInput\\\\|Switch\\\\|mantine/core\\\" frontend/src/components/forms/settings/__tests__/StreamSettingsForm.test.jsx | head -40; sed -n 1,80p frontend/src/utils/pages/SettingsUtils.js\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:50.914Z",
+      "lastAccessed": "2026-10-03T00:04:50.914Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:50.914Z"
+    },
+    "cmd-1790985892621": {
+      "key": "cmd-1790985892621",
+      "value": "{\"command\":\"grep -rn -i \\\"hdhr\\\\|hdhomerun\\\" README.md docs/ 2>/dev/null | head -20; ls docs 2>/dev/null | head -30\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:04:52.621Z",
+      "lastAccessed": "2026-10-03T00:04:52.621Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:04:52.621Z"
+    },
+    "cmd-1790985908776": {
+      "key": "cmd-1790985908776",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat src/mantineTheme.jsx | head -80; echo \\\"====MAIN\\\"; cat src/main.jsx; echo \\\"====MODALS\\\"; grep -rn -A4 \\\"<Modal$\\\\|<Modal \\\" src/components/forms src/components/modals src/components/*.jsx src/pages | grep -n \\\"size=\\\\|fullScreen\\\\|<Modal\\\" | grep -v __tests__ | head -120\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:08.776Z",
+      "lastAccessed": "2026-10-03T00:05:08.776Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:08.776Z"
+    },
+    "cmd-1790985924701": {
+      "key": "cmd-1790985924701",
+      "value": "{\"command\":\"sed -n 60,200p core/serializers.py; grep -n \\\"class CoreSettings\\\\|stream_settings\\\\|STREAM_SETTINGS\\\\|def validate\\\" core/serializers.py core/api_views.py | head -30\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:24.701Z",
+      "lastAccessed": "2026-10-03T00:05:24.701Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:24.701Z"
+    },
+    "cmd-1790985927621": {
+      "key": "cmd-1790985927621",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -rn \\\"index.css\\\\|App.css\\\" src --include=*.jsx | head; wc -l src/components/tables/*.jsx src/components/tables/CustomTable/*.jsx; sed -n 230,330p src/pages/DVR.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:27.621Z",
+      "lastAccessed": "2026-10-03T00:05:27.621Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:27.621Z"
+    },
+    "cmd-1790985927722": {
+      "key": "cmd-1790985927722",
+      "value": "{\"command\":\"for f in docker/uwsgi.dev.ini docker/uwsgi.debug.ini docker/uwsgi.modular.ini; do echo \\\"== $f\\\"; grep -n \\\"attach-daemon\\\\|exec-pre\\\" $f; done; sed -n 440,475p docker/entrypoint.sh; grep -n \\\"manage.py\\\\|management\\\" docker/Dockerfile | head; ls core/management/commands/ 2>/dev/null; grep -rn \\\"DISPATCHARR_PORT\\\\|DISPATCHARR_WEB_HOST\\\" dispatcharr/settings.py core/utils.py | head\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:27.722Z",
+      "lastAccessed": "2026-10-03T00:05:27.722Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:27.722Z"
+    },
+    "cmd-1790985930031": {
+      "key": "cmd-1790985930031",
+      "value": "{\"command\":\"sed -n 150,330p frontend/src/components/forms/settings/__tests__/StreamSettingsForm.test.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:30.031Z",
+      "lastAccessed": "2026-10-03T00:05:30.031Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:30.031Z"
+    },
+    "cmd-1790985931232": {
+      "key": "cmd-1790985931232",
+      "value": "{\"command\":\"sed -n 60,150p frontend/src/components/forms/settings/__tests__/StreamSettingsForm.test.jsx; sed -n 330,420p frontend/src/components/forms/settings/__tests__/StreamSettingsForm.test.jsx; cat scripts/ci_bootstrap_backend.sh | head -60; grep -n \\\"test\\\\|pytest\\\" pyproject.toml | head\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:31.232Z",
+      "lastAccessed": "2026-10-03T00:05:31.232Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:31.232Z"
+    },
+    "cmd-1790985936419": {
+      "key": "cmd-1790985936419",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -rn \\\"index.css\\\\|App.css\\\" src/*.jsx; echo ====DVR; sed -n 330,425p src/pages/DVR.jsx; echo ====CARDS; grep -n \\\"SimpleGrid\\\\|breakpoints\\\\|cols\\\" src/pages/DVR.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:36.419Z",
+      "lastAccessed": "2026-10-03T00:05:36.419Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:36.419Z"
+    },
+    "cmd-1790985943639": {
+      "key": "cmd-1790985943639",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 330,425p src/pages/DVR.jsx; echo \\\"--- grid refs\\\"; grep -n \\\"SimpleGrid\\\\|breakpoints\\\\|cols\\\" src/pages/DVR.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:43.639Z",
+      "lastAccessed": "2026-10-03T00:05:43.639Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:43.639Z"
+    },
+    "cmd-1790985952482": {
+      "key": "cmd-1790985952482",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -oE \\\"\\\\.m_[a-z0-9_]+\\\\{[^}]*\\\\}|@media[^{]*\\\\{[^}]*navbar[^}]*\\\\}\\\" node_modules/@mantine/core/styles.css | grep -iE \\\"navbar|header\\\" | head -30; echo \\\"####APPSHELL css around navbar\\\"; grep -n \\\"app-shell-navbar-width\\\\|--app-shell-header-offset\\\\|data-collapsed\\\\|translateX\\\" node_modules/@mantine/core/styles.css | head -40; echo \\\"#####USETABLE\\\"; sed -n 20,60p src/components/tables/CustomTable/index.jsx; sed -n 540,598p src/components/tables/CustomTable/index.jsx; echo \\\"####STREAM RESIZABLE\\\"; grep -n \\\"streamResizableColumns\\\" -A12 src/components/tables/StreamsTable.jsx | head -40; echo \\\"####STREAM cols sizes\\\"; sed -n 1085,1135p src/components/tables/StreamsTable.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:52.482Z",
+      "lastAccessed": "2026-10-03T00:05:52.482Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:52.482Z"
+    },
+    "cmd-1790985954843": {
+      "key": "cmd-1790985954843",
+      "value": "{\"command\":\"sed -n 96,160p core/api_views.py; grep -n \\\"def _get_group\\\" -A 25 core/models.py | head -40\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:54.843Z",
+      "lastAccessed": "2026-10-03T00:05:54.843Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:54.843Z"
+    },
+    "cmd-1790985955700": {
+      "key": "cmd-1790985955700",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 480,650p src/pages/Stats.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:55.700Z",
+      "lastAccessed": "2026-10-03T00:05:55.700Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:55.700Z"
+    },
+    "cmd-1790985958137": {
+      "key": "cmd-1790985958137",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"return (\\\" src/components/tables/M3UsTable.jsx | tail -2; awk 'NR>=700' src/components/tables/M3UsTable.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:05:58.137Z",
+      "lastAccessed": "2026-10-03T00:05:58.137Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:05:58.137Z"
+    },
+    "cmd-1790985961548": {
+      "key": "cmd-1790985961548",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"return (\\\" src/components/tables/EPGsTable.jsx | tail -2; awk 'NR>=560' src/components/tables/EPGsTable.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:01.548Z",
+      "lastAccessed": "2026-10-03T00:06:01.548Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:01.548Z"
+    },
+    "cmd-1790985966725": {
+      "key": "cmd-1790985966725",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && cat src/components/tables/CustomTable/index.jsx | sed -n 1,120p; echo \\\"--- CustomTable.jsx\\\"; cat src/components/tables/CustomTable/CustomTable.jsx; echo \\\"--- table.css\\\"; cat src/components/tables/table.css\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:06.725Z",
+      "lastAccessed": "2026-10-03T00:06:06.725Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:06.725Z"
+    },
+    "cmd-1790985967498": {
+      "key": "cmd-1790985967498",
+      "value": "{\"command\":\"grep -n \\\"TextInput\\\\|NumberInput\\\\|Switch\\\\|Group\\\\b\\\" frontend/src/components/forms/settings/__tests__/ProxySettingsForm.test.jsx | head -10; grep -rn \\\"hdhr\\\" frontend/src/utils/pages/__tests__/SettingsUtils.test.js | head -3; grep -n \\\"type === 'bool'\\\\|'int'\\\\|'string'\\\\|coerce\\\\|case '\\\" frontend/src/utils/pages/SettingsUtils.js | head -30\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:07.498Z",
+      "lastAccessed": "2026-10-03T00:06:07.498Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:07.498Z"
+    },
+    "cmd-1790985968556": {
+      "key": "cmd-1790985968556",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep '\\\"version\\\"' node_modules/@mantine/core/package.json; f=$(find node_modules/@mantine/core -name \\\"AppShell*.css\\\" | head -3); echo \\\"$f\\\"; for x in $f; do grep -nE \\\"navbar|header|@media|translateX|width\\\" \\\"$x\\\" | head -60; done; echo \\\"#####USEREACTTABLE\\\"; grep -n \\\"useReactTable\\\" -A25 src/components/tables/CustomTable/index.jsx | head -45; echo \\\"#####CTS\\\"; grep -nE \\\"minWidth|width:|miw|overflow|<Paper|height\\\" src/components/tables/ChannelTableStreams.jsx | head; echo \\\"#####FV\\\"; grep -nE \\\"position|width|height|bottom|right|left|top|useState\\\\(|isMobile|innerWidth\\\" src/components/FloatingVideo.jsx | head -60\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:08.556Z",
+      "lastAccessed": "2026-10-03T00:06:08.556Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:08.556Z"
+    },
+    "cmd-1790985971030": {
+      "key": "cmd-1790985971030",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"return (\\\" src/components/tables/UsersTable.jsx | tail -1; awk 'NR>=430' src/components/tables/UsersTable.jsx; echo \\\"--- RecordingCard head\\\"; sed -n 1,60p src/components/cards/RecordingCard.jsx; grep -n \\\"w={\\\\|miw\\\\|width\\\" src/components/cards/*.jsx | head -40\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:11.030Z",
+      "lastAccessed": "2026-10-03T00:06:11.030Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:11.030Z"
+    },
+    "cmd-1790985995830": {
+      "key": "cmd-1790985995830",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"columnVisibility\\\\|initialState\\\\|state:\\\" src/components/tables/CustomTable/index.jsx | head; echo \\\"--- M3U cols\\\"; grep -n \\\"id: '\\\\|accessorKey\\\\|header: '\\\\|size: \\\\|minSize\\\\|grow\\\" src/components/tables/M3UsTable.jsx | head -60; echo \\\"--- EPG cols\\\"; grep -n \\\"id: '\\\\|accessorKey\\\\|header: '\\\\|size: \\\\|minSize\\\\|grow\\\\|columnVisibility\\\" src/components/tables/EPGsTable.jsx | head -50; echo \\\"--- useTable call M3U\\\"; grep -n -B2 -A25 \\\"useTable({\\\" src/components/tables/M3UsTable.jsx | head -60\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:35.830Z",
+      "lastAccessed": "2026-10-03T00:06:35.830Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:35.830Z"
+    },
+    "cmd-1790985999313": {
+      "key": "cmd-1790985999313",
+      "value": "{\"command\":\"brew install hdhomerun >/tmp/claude-501/brew_hdhr.log 2>&1; echo \\\"exit $?\\\"; which hdhomerun_config\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:39.313Z",
+      "lastAccessed": "2026-10-03T00:06:39.313Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:39.313Z"
+    },
+    "cmd-1790986011371": {
+      "key": "cmd-1790986011371",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"Group\\\\b\\\\|SimpleGrid\\\\|<Grid\\\\|Flex\\\\|w={\\\\|width:\\\" src/components/forms/settings/{DvrSettingsForm,NavOrderForm,NetworkAccessForm,ProxySettingsForm,SystemSettingsForm,UiSettingsForm,UserLimitsForm,ConnectionSecurityPanel}.jsx | grep -v \\\"import\\\\|Text\\\\|Title\\\" | head -60\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:51.371Z",
+      "lastAccessed": "2026-10-03T00:06:51.371Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:51.371Z"
+    },
+    "cmd-1790986014972": {
+      "key": "cmd-1790986014972",
+      "value": "{\"command\":\"grep -n \\\"environment\\\\|network_mode\\\\|ports\\\" docker/docker-compose.dev.yml docker/docker-compose.debug.yml | head; grep -rn \\\"DISPATCHARR_PORT\\\" dispatcharr/settings.py core/*.py apps/channels/*.py 2>/dev/null | head -5; grep -n \\\"DATABASES\\\\|sqlite\\\\|TEST\\\" dispatcharr/settings.py | head; grep -n \\\"ipaddress\\\\|import socket\\\" core/utils.py dispatcharr/utils.py | head -5\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:54.972Z",
+      "lastAccessed": "2026-10-03T00:06:54.972Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:54.972Z"
+    },
+    "cmd-1790986015763": {
+      "key": "cmd-1790986015763",
+      "value": "{\"command\":\"sed -n 105,135p frontend/src/utils/pages/SettingsUtils.js; sed -n 178,215p frontend/src/utils/pages/SettingsUtils.js; sed -n 60,120p frontend/src/components/forms/settings/__tests__/ProxySettingsForm.test.jsx; sed -n 1,30p apps/output/tests/test_views.py; grep -n \\\"class\\\\|def setUp\\\\|HDHR\\\\|hdhr\\\\|discover\\\" apps/output/tests/test_views.py | head -20\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:06:55.763Z",
+      "lastAccessed": "2026-10-03T00:06:55.763Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:06:55.763Z"
+    },
+    "cmd-1790986020681": {
+      "key": "cmd-1790986020681",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 805,927p src/pages/LogFileView.jsx; echo \\\"--- LogFiles\\\"; sed -n 115,167p src/pages/LogFiles.jsx; echo \\\"--- ConnectLogs\\\"; sed -n 235,275p src/components/ConnectLogsSection.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:00.681Z",
+      "lastAccessed": "2026-10-03T00:07:00.681Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:00.681Z"
+    },
+    "cmd-1790986020803": {
+      "key": "cmd-1790986020803",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 195,286p src/pages/VODs.jsx; echo \\\"--- Plugins\\\"; sed -n 120,175p src/pages/Plugins.jsx; echo \\\"--- PluginBrowse\\\"; sed -n 205,320p src/pages/PluginBrowse.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:00.803Z",
+      "lastAccessed": "2026-10-03T00:07:00.803Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:00.803Z"
+    },
+    "cmd-1790986021151": {
+      "key": "cmd-1790986021151",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && npm install --no-audit --no-fund 2>&1 | tail -5 && grep '\\\"version\\\"' node_modules/@mantine/core/package.json && f=$(find node_modules/@mantine/core -name \\\"AppShell.css\\\" -o -name \\\"AppShell*.css\\\" | head -2); echo \\\"$f\\\"; grep -nE \\\"navbar|header|@media|translateX|width|transform\\\" node_modules/@mantine/core/styles/AppShell.css | head -70\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:01.151Z",
+      "lastAccessed": "2026-10-03T00:07:01.151Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:01.151Z"
+    },
+    "cmd-1790986021242": {
+      "key": "cmd-1790986021242",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 60,230p src/pages/Connect.jsx; echo \\\"--- LoginForm\\\"; grep -n \\\"return (\\\" src/components/forms/LoginForm.jsx | tail -1; sed -n 180,300p src/components/forms/LoginForm.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:01.242Z",
+      "lastAccessed": "2026-10-03T00:07:01.242Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:01.242Z"
+    },
+    "cmd-1790986025694": {
+      "key": "cmd-1790986025694",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && for f in OutputProfilesTable StreamProfilesTable UserAgentsTable ServerGroupsTable LogosTable VODLogosTable; do echo \\\"=== $f\\\"; grep -n \\\"minWidth\\\\|miw=\\\\|w={[0-9]\\\\|w={'[0-9]\\\\|width: [0-9]\\\\|<Flex\\\\|<Group\\\\|justifyContent: 'space-between'\\\\|overflow\\\" src/components/tables/$f.jsx | head -25; done\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:05.694Z",
+      "lastAccessed": "2026-10-03T00:07:05.694Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:05.694Z"
+    },
+    "cmd-1790986050579": {
+      "key": "cmd-1790986050579",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -i '' 's#http://127.0.0.1:5656#http://192.168.3.148:9191#; s#http://127.0.0.1:8001#http://192.168.3.148:9191#' vite.config.js && grep -n target vite.config.js && (nohup npx vite --port 5199 > /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/scratchpad/vite.log 2>&1 &) ; sleep 4; tail -5 /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/scratchpad/vite.log\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:30.579Z",
+      "lastAccessed": "2026-10-03T00:07:30.579Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:30.579Z"
+    },
+    "cmd-1790986054184": {
+      "key": "cmd-1790986054184",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 380,420p src/components/tables/CustomTable/index.jsx; grep -rn \\\"columnVisibility\\\" src/components/tables/*.jsx src/pages/*.jsx | grep -v \\\"ChannelsTable\\\\|StreamsTable\\\" | head\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:34.184Z",
+      "lastAccessed": "2026-10-03T00:07:34.184Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:34.184Z"
+    },
+    "cmd-1790986077993": {
+      "key": "cmd-1790986077993",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 1,80p /Users/zane/.npm-cache/_logs/2026-10-03T00_06_18_022Z-debug-0.log | grep -iE \\\"error|exists|EEXIST\\\" | head; echo ---; npm install --no-audit --no-fund --prefer-online --cache /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/scratchpad/npmcache 2>&1 | tail -4; grep '\\\"version\\\"' node_modules/@mantine/core/package.json\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:07:57.993Z",
+      "lastAccessed": "2026-10-03T00:07:57.993Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:07:57.993Z"
+    },
+    "cmd-1790986082882": {
+      "key": "cmd-1790986082882",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && ls node_modules/.bin/vite 2>/dev/null || npm install --silent 2>&1 | tail -3; (nohup ./node_modules/.bin/vite --port 5199 > /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/scratchpad/vite.log 2>&1 &); sleep 5; tail -5 /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/scratchpad/vite.log\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:02.882Z",
+      "lastAccessed": "2026-10-03T00:08:02.882Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:02.882Z"
+    },
+    "cmd-1790986084196": {
+      "key": "cmd-1790986084196",
+      "value": "{\"command\":\"sed -n 215,300p frontend/src/utils/pages/SettingsUtils.js\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:04.196Z",
+      "lastAccessed": "2026-10-03T00:08:04.196Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:04.196Z"
+    },
+    "cmd-1790986088353": {
+      "key": "cmd-1790986088353",
+      "value": "{\"command\":\"grep -n \\\"ENTRYPOINT\\\\|CMD\\\\|entrypoint\\\" docker/Dockerfile; grep -n \\\"def network_access_allowed\\\" -A 30 dispatcharr/utils.py | head -50; grep -n \\\"hdhr\\\" dispatcharr/settings.py; grep -rn \\\"_PATH_ALIASES\\\\|apps/hdhr\\\" tests/ dispatcharr/tests 2>/dev/null | head; which uv; ls /dispatcharrpy 2>/dev/null; python3 -c \\\"import django; print(django.__version__)\\\" 2>&1; grep -n \\\"requires-python\\\\|^django\\\\|\\\\\\\"django\\\" pyproject.toml | head -3\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:08.353Z",
+      "lastAccessed": "2026-10-03T00:08:08.353Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:08.353Z"
+    },
+    "cmd-1790986092343": {
+      "key": "cmd-1790986092343",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && f=$(find node_modules/@mantine/core/styles -iname \\\"AppShell*.css\\\" | head -1); echo \\\"$f\\\"; grep -oE \\\"\\\\.m_[a-z0-9]+[^{]*\\\\{[^}]*\\\\}\\\" \\\"$f\\\" | grep -E \\\"navbar|header|translateX|width: 100%|@media\\\" | head -20; echo \\\"---mediablocks---\\\"; grep -n \\\"@media\\\" \\\"$f\\\" | head; echo \\\"---scripts---\\\"; grep -A12 '\\\"scripts\\\"' package.json\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:12.343Z",
+      "lastAccessed": "2026-10-03T00:08:12.343Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:12.343Z"
+    },
+    "cmd-1790986092642": {
+      "key": "cmd-1790986092642",
+      "value": "{\"command\":\"grep -n \\\"def _get_client_ip\\\\|def get_client_ip\\\\|def client_ip\\\\|def _ip_in_cidrs\\\\|def ip_in_networks\\\\|def .*allowed\\\" dispatcharr/utils.py core/utils.py | head; grep -n \\\"NETWORK_ACCESS_KEY\\\\|def get_network_access\\\" core/models.py | head -5; grep -n \\\"def get_network_access\\\" -A 20 core/models.py | head -30\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:12.642Z",
+      "lastAccessed": "2026-10-03T00:08:12.642Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:12.642Z"
+    },
+    "cmd-1790986103523": {
+      "key": "cmd-1790986103523",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && f=node_modules/@mantine/core/styles/AppShell.css; wc -c $f; tr '}' '}\\\\n' < $f | grep -nE \\\"navbar|header\\\" | head -40\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:23.523Z",
+      "lastAccessed": "2026-10-03T00:08:23.523Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:23.523Z"
+    },
+    "cmd-1790986104812": {
+      "key": "cmd-1790986104812",
+      "value": "{\"command\":\"tail -5 /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/tasks/bnf7r1my9.output; tail -5 /tmp/claude-501/brew_hdhr.log 2>/dev/null; cd /Users/zane/Documents/GitHub/DispatcharrZ && grep -n \\\"def get_client_ip\\\" -A 30 dispatcharr/utils.py | grep -n \\\"def _normalize_ip\\\\|LOCAL_NETWORK_CIDRS\\\" ; grep -n \\\"^LOCAL_NETWORK_CIDRS\\\\|^def _normalize_ip\\\" -A 6 dispatcharr/utils.py | head -20; grep -n \\\"hdhr\\\\|HDHR\\\" frontend/src/pages/Settings.jsx frontend/src/api.js 2>/dev/null | head -5; ls ~/.pyenv/versions 2>/dev/null; ls /opt/homebrew/bin/python3* 2>/dev/null\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:24.812Z",
+      "lastAccessed": "2026-10-03T00:08:24.812Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:24.812Z"
+    },
+    "cmd-1790986110371": {
+      "key": "cmd-1790986110371",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && grep -n \\\"localStorage\\\\|sessionStorage\\\\|cookie\\\" src/store/auth.jsx src/api.js | head -20\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:30.371Z",
+      "lastAccessed": "2026-10-03T00:08:30.371Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:30.371Z"
+    },
+    "cmd-1790986127272": {
+      "key": "cmd-1790986127272",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && python3 - <<'EOF'\\nimport re\\np='src/App.jsx'; s=open(p).read()\\ns=s.replace(\\\"import { Box, AppShell, MantineProvider } from '@mantine/core';\\\",\\n\\\"import { Box, AppShell, Burger, Group, MantineProvider, Text } from '@mantine/core';\\\\nimport { useDisclosure } from '@mantine/hooks';\\\\nimport useIsMobile from './hooks/useIsMobile';\\\\nimport logo from './images/logo.png';\\\")\\ns=s.replace(\\\"\\\"\\\"  const [open, setOpen] = useBrowserStorage('dispatcharr_sidebar_open', true);\\n\\\"\\\"\\\",\\\"\\\"\\\"  const [open, setOpen] = useBrowserStorage('dispatcharr_sidebar_open', true);\\n  const isMobile = useIsMobile();\\n  const [mobileNavOpened, { toggle: toggleMobileNav, close: closeMobileNav }] =\\n    useDisclosure(false);\\n\\\"\\\"\\\")\\ns=s.replace(\\\"\\\"\\\"            <AppShell\\n              header={{\\n                height: 0,\\n              }}\\n              navbar={{\\n                width: authReady ? (open ? drawerWidth : miniDrawerWidth) : 0,\\n              }}\\n            >\\n              {authReady && (\\n                <Sidebar\\n                  drawerWidth={drawerWidth}\\n                  miniDrawerWidth={miniDrawerWidth}\\n                  collapsed={!open}\\n                  toggleDrawer={toggleDrawer}\\n                />\\n              )}\\n\\\"\\\"\\\",\\\"\\\"\\\"            <AppShell\\n              // Header only exists on mobile (< sm); desktop keeps height 0.\\n              header={{ height: { base: authReady ? 50 : 0, sm: 0 } }}\\n              navbar={{\\n                width: authReady ? (open ? drawerWidth : miniDrawerWidth) : 0,\\n                breakpoint: 'sm',\\n                collapsed: { mobile: !mobileNavOpened, desktop: !authReady },\\n              }}\\n            >\\n              {authReady && (\\n                <AppShell.Header\\n                  hiddenFrom=\\\"sm\\\"\\n                  style={{\\n                    backgroundColor: '#1A1A1E',\\n                    borderBottom: '1px solid #2A2A2E',\\n                  }}\\n                >\\n                  <Group h=\\\"100%\\\" px=\\\"sm\\\" gap=\\\"sm\\\" wrap=\\\"nowrap\\\">\\n                    <Burger\\n                      opened={mobileNavOpened}\\n                      onClick={toggleMobileNav}\\n                      size=\\\"sm\\\"\\n                      aria-label=\\\"Toggle navigation\\\"\\n                    />\\n                    <img width={26} src={logo} alt=\\\"Dispatcharr\\\" />\\n                    <Text fw={600} size=\\\"lg\\\">\\n                      Dispatcharr\\n                    </Text>\\n                  </Group>\\n                </AppShell.Header>\\n              )}\\n              {authReady && (\\n                <Sidebar\\n                  drawerWidth={drawerWidth}\\n                  miniDrawerWidth={miniDrawerWidth}\\n                  collapsed={isMobile ? false : !open}\\n                  toggleDrawer={isMobile ? closeMobileNav : toggleDrawer}\\n                  onNavigate={closeMobileNav}\\n                />\\n              )}\\n\\\"\\\"\\\")\\ns=s.replace(\\\"\\\"\\\"                    backgroundColor: '#18181b',\\n                    height: '100vh',\\n                    color: 'white',\\n                  }}\\n                >\\n                  <Box sx={{ p: 2, flex: 1, overflow: 'auto' }}>\\\"\\\"\\\",\\\"\\\"\\\"                    backgroundColor: '#18181b',\\n                    // dvh: mobile browser chrome; offset: mobile header height (0 on desktop)\\n                    height:\\n                      'calc(100dvh - var(--app-shell-header-offset, 0px))',\\n                    color: 'white',\\n                  }}\\n                >\\n                  <Box style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>\\\"\\\"\\\")\\nopen(p,'w').write(s)\\n\\np='src/components/Sidebar.jsx'; s=open(p).read()\\ns=s.replace(\\\"const Sidebar = ({ collapsed, toggleDrawer, drawerWidth, miniDrawerWidth }) => {\\\",\\n\\\"const Sidebar = ({ collapsed, toggleDrawer, drawerWidth, miniDrawerWidth, onNavigate }) => {\\\")\\ns=s.replace(\\\"\\\"\\\"  const copyPublicIP = async () => {\\\"\\\"\\\",\\\"\\\"\\\"  // Mobile: close the overlay navbar whenever the route changes.\\n  useEffect(() => {\\n    onNavigate?.();\\n    // eslint-disable-next-line react-hooks/exhaustive-deps\\n  }, [location.pathname, location.hash]);\\n\\n  const copyPublicIP = async () => {\\\"\\\"\\\")\\ns=s.replace(\\\"\\\"\\\"        borderRight: '1px solid #2A2A2E',\\n        minHeight: '100vh',\\n        display: 'flex',\\\"\\\"\\\",\\\"\\\"\\\"        borderRight: '1px solid #2A2A2E',\\n        display: 'flex',\\\"\\\"\\\")\\nopen(p,'w').write(s)\\nEOF\\ngrep -n \\\"sx=\\\" src/App.jsx; grep -n \\\"onNavigate\\\\|minHeight: '100vh'\\\" src/components/Sidebar.jsx\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:08:47.272Z",
+      "lastAccessed": "2026-10-03T00:08:47.272Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:08:47.272Z"
+    },
+    "cmd-1790986144823": {
+      "key": "cmd-1790986144823",
+      "value": "{\"command\":\"sed -n 1,57p core/serializers.py | grep -n \\\"import\\\\|KEY\\\"; grep -n \\\"Error\\\\|error\\\" /tmp/claude-501/brew_hdhr.log | head -5; sed -n 117,147p dispatcharr/utils.py\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:09:04.823Z",
+      "lastAccessed": "2026-10-03T00:09:04.823Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:09:04.823Z"
+    },
+    "cmd-1790986149990": {
+      "key": "cmd-1790986149990",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && python3 - <<'EOF'\\np='src/App.jsx'; s=open(p).read()\\ns=s.replace(\\\"<Box style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>\\\",\\\"<Box>\\\")\\ns=s.replace(\\\"collapsed: { mobile: !mobileNavOpened, desktop: !authReady },\\\",\\\"collapsed: { mobile: !mobileNavOpened },\\\")\\nopen(p,'w').write(s)\\n\\np='src/pages/Channels.jsx'; s=open(p).read()\\ns=s.replace(\\\"import React, { useCallback, useRef } from 'react';\\\",\\\"import React, { useCallback, useRef, useState } from 'react';\\\")\\ns=s.replace(\\\"import { Box } from '@mantine/core';\\\",\\\"import { Box, SegmentedControl, Stack } from '@mantine/core';\\\")\\ns=s.replace(\\\"import useBrowserStorage from '../hooks/useBrowserStorage';\\\",\\\"import useBrowserStorage from '../hooks/useBrowserStorage';\\\\nimport useIsMobile from '../hooks/useIsMobile';\\\")\\ns=s.replace(\\\"\\\"\\\"  const enableLogoRendering = useLogosStore((s) => s.enableLogoRendering);\\n\\\"\\\"\\\",\\\"\\\"\\\"  const enableLogoRendering = useLogosStore((s) => s.enableLogoRendering);\\n  const isMobile = useIsMobile();\\n  const [mobileTab, setMobileTab] = useState('channels');\\n\\\"\\\"\\\")\\ns=s.replace(\\\"\\\"\\\"  return (\\n    <Box h={'100vh'} w={'100%'} display={'flex'} style={{ overflowX: 'auto' }}>\\\"\\\"\\\",\\\"\\\"\\\"  if (isMobile) {\\n    // One table at a time; both stay mounted so onReady/logo loading still fires.\\n    const show = (tab) => ({\\n      display: mobileTab === tab ? 'flex' : 'none',\\n      flexDirection: 'column',\\n      flex: 1,\\n      minHeight: 0,\\n    });\\n    return (\\n      <Stack\\n        gap=\\\"xs\\\"\\n        p=\\\"xs\\\"\\n        h=\\\"calc(100dvh - var(--app-shell-header-offset, 0px))\\\"\\n        style={{ overflow: 'hidden' }}\\n      >\\n        <SegmentedControl\\n          fullWidth\\n          value={mobileTab}\\n          onChange={setMobileTab}\\n          data={[\\n            { label: 'Channels', value: 'channels' },\\n            { label: 'Streams', value: 'streams' },\\n          ]}\\n        />\\n        <Box style={show('channels')}>\\n          <ChannelsTable onReady={handleChannelsReady} />\\n        </Box>\\n        <Box style={show('streams')}>\\n          <StreamsTable onReady={handleStreamsReady} />\\n        </Box>\\n      </Stack>\\n    );\\n  }\\n\\n  return (\\n    <Box h={'100vh'} w={'100%'} display={'flex'} style={{ overflowX: 'auto' }}>\\\"\\\"\\\")\\nopen(p,'w').write(s)\\nEOF\\necho done\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:09:09.990Z",
+      "lastAccessed": "2026-10-03T00:09:09.990Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:09:09.990Z"
+    },
+    "cmd-1790986155497": {
+      "key": "cmd-1790986155497",
+      "value": "{\"command\":\"cd /private/tmp/claude-501/-Users-zane-Documents-GitHub-DispatcharrZ/66c40638-42ca-46f3-adae-aad499b3642c/scratchpad && git clone -q --depth 1 https://github.com/Silicondust/libhdhomerun.git && cd libhdhomerun && make -j4 hdhomerun_config 2>&1 | tail -3; ls -la hdhomerun_config\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:09:15.497Z",
+      "lastAccessed": "2026-10-03T00:09:15.497Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:09:15.497Z"
+    },
+    "cmd-1790986175938": {
+      "key": "cmd-1790986175938",
+      "value": "{\"command\":\"cd /Users/zane/Documents/GitHub/DispatcharrZ/frontend && sed -n 115,135p src/components/tables/ChannelsTable.jsx; echo ----; sed -n 1026,1032p src/components/tables/ChannelsTable.jsx; sed -n 1075,1080p src/components/tables/ChannelsTable.jsx; sed -n 1093,1098p src/components/tables/ChannelsTable.jsx; sed -n 1111,1135p src/components/tables/ChannelsTable.jsx; echo ----STREAMS; sed -n 1296,1330p src/components/tables/StreamsTable.jsx; grep -n \\\"import.*useBrowserStorage\\\\|^import React\\\\|const isMobile\\\\|useMantineTheme()\\\" src/components/tables/StreamsTable.jsx src/components/tables/ChannelsTable.jsx | head; grep -n \\\"pairedColumnSizing\\\" src/components/tables/CustomTable/index.jsx | head -5\",\"exitCode\":0,\"success\":true}",
+      "namespace": "commands",
+      "storedAt": "2026-10-03T00:09:35.938Z",
+      "lastAccessed": "2026-10-03T00:09:35.938Z",
+      "accessCount": 0,
+      "expiresAt": "2026-11-02T00:09:35.938Z"
+    }
+  },
+  "version": "3.0.0"
+}
