@@ -23,3 +23,7 @@ models
 .idea
 .vite/
 uv.lock
+# ruflo / claude-flow local state
+.claude-flow/
+.swarm/
+ruvector.db
