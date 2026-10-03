@@ -78,7 +78,20 @@ class HDHRProfileRouteTests(TestCase):
         m = resolve("/hdhr/Sports/output_profile/5/lineup.json")
         self.assertEqual(m.url_name, "lineup_with_profile_and_output")
         m = resolve("/hdhr/Sports/720p Transcode/lineup.json")
-        self.assertEqual(m.url_name, "lineup_with_profile_and_output_name")
-        self.assertEqual(m.kwargs, {"channel_profile": "Sports", "output_profile": "720p Transcode"})
+        self.assertEqual(m.url_name, "lineup_with_profile")
+        self.assertEqual(m.kwargs, {"profile_path": "Sports/720p Transcode"})
         m = resolve("/hdhr/720p Transcode/lineup.json")
         self.assertEqual(m.url_name, "lineup_with_profile")
+
+
+    def test_output_profile_name_containing_slash(self):
+        # "Plex/TV" must resolve as ONE output profile, not channel "Plex" + output "TV".
+        op = _op("Plex/TV")
+        lineup = self.lineup("/hdhr/Plex%2FTV/lineup.json")
+        self.assertEqual(len(lineup), 2)
+        for ch in lineup:
+            self.assertTrue(ch["URL"].endswith(f"?output_profile={op.id}"))
+        # combined form with a slashed output profile name
+        lineup = self.lineup("/hdhr/Sports/Plex%2FTV/lineup.json")
+        self.assertEqual([c["GuideName"] for c in lineup], ["In"])
+        self.assertTrue(lineup[0]["URL"].endswith(f"?output_profile={op.id}"))

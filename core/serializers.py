@@ -127,7 +127,7 @@ class CoreSettingsSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _validate_hdhr(value):
-        from apps.hdhr.discovery import validate_device_id
+        from apps.hdhr.discovery import normalize_advertised_url, validate_device_id
 
         errors = {}
         device_id = value.get("hdhr_device_id")
@@ -149,6 +149,12 @@ class CoreSettingsSerializer(serializers.ModelSerializer):
         name = value.get("hdhr_friendly_name")
         if name is not None and len(str(name).strip()) > 64:
             errors["hdhr_friendly_name"] = "Friendly name must be 64 characters or fewer"
+        if "hdhr_advertised_url" in value:
+            advertised = normalize_advertised_url(value["hdhr_advertised_url"])
+            if advertised is None:
+                errors["hdhr_advertised_url"] = "Must be an http(s) URL with host and optional port, no path (e.g. http://192.168.1.10:9191)"
+            else:
+                value["hdhr_advertised_url"] = advertised
         if errors:
             raise serializers.ValidationError({"value": errors})
 

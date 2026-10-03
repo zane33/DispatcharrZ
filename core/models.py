@@ -492,13 +492,15 @@ class CoreSettings(models.Model):
             "hdhr_friendly_name": "Dispatcharr HDHomeRun",
             "hdhr_device_id": "",
             "hdhr_tuner_count": None,
+            "hdhr_advertised_url": "",
         })
 
     @classmethod
     def get_hdhr_settings(cls):
         """Resolved HDHomeRun emulation settings: discovery_enabled, friendly_name,
-        device_id (generated + persisted on first use), tuner_count (auto when unset)."""
-        from apps.hdhr.discovery import generate_device_id, validate_device_id
+        device_id (generated + persisted on first use), tuner_count (auto when unset),
+        advertised_url ("" = auto-detect from the request's local IP)."""
+        from apps.hdhr.discovery import generate_device_id, normalize_advertised_url, validate_device_id
         from apps.m3u.utils import calculate_tuner_count
 
         raw = cls.get_stream_settings()
@@ -515,6 +517,7 @@ class CoreSettings(models.Model):
             "friendly_name": (raw.get("hdhr_friendly_name") or "").strip() or "Dispatcharr HDHomeRun",
             "device_id": device_id,
             "tuner_count": max(1, min(tuner_count, 255)),
+            "advertised_url": normalize_advertised_url(raw.get("hdhr_advertised_url")) or "",
         }
 
     @classmethod

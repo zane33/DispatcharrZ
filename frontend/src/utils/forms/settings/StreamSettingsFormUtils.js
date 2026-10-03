@@ -27,6 +27,7 @@ export const getStreamSettingsFormInitialValues = () => {
     hdhr_friendly_name: 'Dispatcharr HDHomeRun',
     hdhr_device_id: '',
     hdhr_tuner_count: null,
+    hdhr_advertised_url: '',
   };
 };
 
@@ -48,5 +49,9 @@ export const getStreamSettingsFormValidation = () => {
       (Number.isInteger(Number(value)) && value >= 1 && value <= 255)
         ? null
         : 'Leave blank for auto, or enter 1-255',
+    hdhr_advertised_url: (value) =>
+      !value || /^https?:\/\/[^/?#\s]+\/?$/.test(value.trim())
+        ? null
+        : 'Must be an http(s) URL with host and optional port, no path (e.g. http://192.168.1.10:9191)',
   };
 };

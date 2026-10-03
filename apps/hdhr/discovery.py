@@ -12,6 +12,7 @@ import os
 import socket
 import struct
 import zlib
+from urllib.parse import urlsplit
 
 logger = logging.getLogger(__name__)
 
@@ -150,6 +151,23 @@ def _should_reply(tags, our_device_id):
     return wanted_id in (WILDCARD, int(our_device_id, 16))
 
 
+def normalize_advertised_url(value):
+    """Return ``scheme://host[:port]`` (trailing slash stripped), "" for blank, None when invalid.
+
+    Only an http(s) origin is accepted: no path, query or fragment."""
+    value = str(value or "").strip().rstrip("/")
+    if not value:
+        return ""
+    parts = urlsplit(value)
+    if parts.scheme not in ("http", "https") or not parts.hostname or parts.path or parts.query or parts.fragment:
+        return None
+    try:
+        parts.port
+    except ValueError:
+        return None
+    return f"{parts.scheme}://{parts.netloc}"
+
+
 def handle_request(data, peer_ip, hdhr_settings, port):
     """Pure helper: return the reply bytes for ``data`` or None. Testable without sockets."""
     parsed = parse_packet(data)
@@ -157,7 +175,9 @@ def handle_request(data, peer_ip, hdhr_settings, port):
         return None
     if not hdhr_settings["discovery_enabled"] or not _should_reply(parsed[1], hdhr_settings["device_id"]):
         return None
-    base_url = f"http://{local_ip_for(peer_ip)}:{port}/hdhr"
+    # Docker bridge networking: the detected IP is the container's, so let the user override it.
+    advertised = hdhr_settings.get("advertised_url") or ""
+    base_url = f"{advertised}/hdhr" if advertised else f"http://{local_ip_for(peer_ip)}:{port}/hdhr"
     return build_discover_reply(hdhr_settings["device_id"], hdhr_settings["tuner_count"], base_url)
 
 

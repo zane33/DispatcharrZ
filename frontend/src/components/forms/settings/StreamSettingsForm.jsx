@@ -290,6 +290,14 @@ const StreamSettingsForm = React.memo(({ active }) => {
           }
           error={form.errors['hdhr_tuner_count']}
         />
+        <TextInput
+          {...form.getInputProps('hdhr_advertised_url')}
+          id="hdhr_advertised_url"
+          name="hdhr_advertised_url"
+          label="HDHomeRun Advertised URL"
+          description="Address clients should use to reach Dispatcharr. Leave blank to auto-detect. Required when Docker uses bridge networking (auto-detect returns the container IP)."
+          placeholder="http://192.168.1.10:9191"
+        />
 
         <MultiSelect
           id="m3u_hash_key"

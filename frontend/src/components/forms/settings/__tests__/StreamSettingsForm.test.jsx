@@ -207,6 +207,7 @@ const mockFormValues = {
   hdhr_friendly_name: 'Dispatcharr HDHomeRun',
   hdhr_device_id: '',
   hdhr_tuner_count: null,
+  hdhr_advertised_url: '',
 };
 
 const makeFormMock = (overrides = {}) => ({
@@ -351,6 +352,7 @@ describe('StreamSettingsForm', () => {
       expect(screen.getByTestId('desc-hdhr_tuner_count')).toHaveTextContent(
         /Blank = auto/
       );
+      expect(screen.getByTestId('hdhr_advertised_url')).toHaveValue('');
     });
 
     it('stores tuner count as a number and blank as null', () => {

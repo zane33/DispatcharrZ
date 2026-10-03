@@ -26,6 +26,7 @@ describe('StreamSettingsFormUtils', () => {
         hdhr_friendly_name: 'Dispatcharr HDHomeRun',
         hdhr_device_id: '',
         hdhr_tuner_count: null,
+        hdhr_advertised_url: '',
       });
     });
 
@@ -74,6 +75,7 @@ describe('StreamSettingsFormUtils', () => {
         'hdhr_friendly_name',
         'hdhr_device_id',
         'hdhr_tuner_count',
+        'hdhr_advertised_url',
       ]);
     });
 
@@ -161,6 +163,15 @@ describe('StreamSettingsFormUtils', () => {
     it('limits friendly name to 64 chars', () => {
       expect(rules.hdhr_friendly_name('Lounge')).toBeNull();
       expect(rules.hdhr_friendly_name('x'.repeat(65))).toMatch(/64/);
+    });
+
+    it('validates hdhr_advertised_url as an http(s) origin', () => {
+      const rules = StreamSettingsFormUtils.getStreamSettingsFormValidation();
+      expect(rules.hdhr_advertised_url('')).toBeNull();
+      expect(rules.hdhr_advertised_url('http://192.168.1.10:9191')).toBeNull();
+      expect(rules.hdhr_advertised_url('https://tv.example.com/')).toBeNull();
+      expect(rules.hdhr_advertised_url('192.168.1.10:9191')).toMatch(/http/);
+      expect(rules.hdhr_advertised_url('http://host/hdhr')).toMatch(/no path/);
     });
   });
 });

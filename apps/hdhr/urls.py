@@ -24,16 +24,13 @@ urlpatterns = [
     path('output_profile/<int:output_profile_id>/lineup.json', LineupAPIView.as_view(), name='lineup_with_output'),
     path('output_profile/<int:output_profile_id>/lineup_status.json', LineupStatusAPIView.as_view(), name='lineup_status_with_output'),
 
-    # channel_profile + output_profile by NAME  (/hdhr/<channel_profile>/<output_profile>/...)
+    # Profiles by NAME: /hdhr/<output_profile>/, /hdhr/<channel_profile>/ or
+    # /hdhr/<channel_profile>/<output_profile>/. One greedy <path> segment because
+    # profile names may themselves contain '/'; _resolve_hdhr_profiles splits it.
     # Must stay below the literal 'output_profile/<int>' routes so those keep matching first.
-    path('<str:channel_profile>/<str:output_profile>/discover.json', DiscoverAPIView.as_view(), name='discover_with_profile_and_output_name'),
-    path('<str:channel_profile>/<str:output_profile>/lineup.json', LineupAPIView.as_view(), name='lineup_with_profile_and_output_name'),
-    path('<str:channel_profile>/<str:output_profile>/lineup_status.json', LineupStatusAPIView.as_view(), name='lineup_status_with_profile_and_output_name'),
-
-    # channel_profile only  (/hdhr/<name>/ - a ChannelProfile name, or an OutputProfile name)
-    path('<str:channel_profile>/discover.json', DiscoverAPIView.as_view(), name='discover_with_profile'),
-    path('<str:channel_profile>/lineup.json', LineupAPIView.as_view(), name='lineup_with_profile'),
-    path('<str:channel_profile>/lineup_status.json', LineupStatusAPIView.as_view(), name='lineup_status_with_profile'),
+    path('<path:profile_path>/discover.json', DiscoverAPIView.as_view(), name='discover_with_profile'),
+    path('<path:profile_path>/lineup.json', LineupAPIView.as_view(), name='lineup_with_profile'),
+    path('<path:profile_path>/lineup_status.json', LineupStatusAPIView.as_view(), name='lineup_status_with_profile'),
 
     # bare endpoints
     path('discover.json', DiscoverAPIView.as_view(), name='discover_no_profile'),

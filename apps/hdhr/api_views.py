@@ -53,7 +53,7 @@ class DiscoverAPIView(APIView):
     @extend_schema(
         description="Retrieve HDHomeRun device discovery information",
     )
-    def get(self, request, channel_profile=None, output_profile=None, output_profile_id=None):
+    def get(self, request, channel_profile=None, profile_path=None, output_profile_id=None):
         blocked = _hdhr_network_check(request)
         if blocked is not None:
             return blocked
@@ -64,7 +64,7 @@ class DiscoverAPIView(APIView):
         from core.models import CoreSettings
         hdhr = CoreSettings.get_hdhr_settings()
 
-        slug_parts = [p for p in [channel_profile, output_profile, str(output_profile_id) if output_profile_id is not None else None] if p]
+        slug_parts = [p for p in [channel_profile, profile_path, str(output_profile_id) if output_profile_id is not None else None] if p]
         # Profile variants need their own ID so clients see distinct tuners, but it
         # must stay a checksum-valid 8-hex ID or libhdhomerun clients (Plex) drop it.
         from .discovery import generate_device_id
@@ -88,33 +88,48 @@ class DiscoverAPIView(APIView):
 _name_collisions_warned = set()
 
 
-def _resolve_hdhr_profiles(channel_profile=None, output_profile=None, output_profile_id=None):
-    """Map `<str>` URL segments (names) to (channel_profile_name | None, output_profile_id | None).
+def _resolve_hdhr_profiles(channel_profile=None, profile_path=None, output_profile_id=None):
+    """Map URL name segments to (channel_profile_name | None, output_profile_id | None).
 
-    `/hdhr/<name>/` is a ChannelProfile name if one exists, else an active OutputProfile
-    name. On collision the ChannelProfile wins (warned once per name); use the combined
-    `/hdhr/<channel_profile>/<output_profile>/` form to get both.
+    ``profile_path`` is the raw ``/hdhr/<...>/`` remainder and may contain '/'
+    (profile names can). Resolution order: whole path as ChannelProfile name,
+    whole path as active OutputProfile name, then each '/' split as
+    ``<channel_profile>/<output_profile>``. On a ChannelProfile/OutputProfile
+    name collision the ChannelProfile wins (warned once per name).
     """
     from core.models import OutputProfile
 
-    if output_profile is not None:
-        op = OutputProfile.objects.filter(name=output_profile, is_active=True).first()
-        if op is None:
-            logger.warning("HDHR output profile '%s' not found or inactive", output_profile)
-        output_profile_id = op.id if op else output_profile_id
+    if profile_path is None:
+        return channel_profile, output_profile_id
 
-    if channel_profile is not None:
-        is_channel_profile = ChannelProfile.objects.filter(name=channel_profile).exists()
-        op = OutputProfile.objects.filter(name=channel_profile, is_active=True).first()
-        if op is not None and not is_channel_profile:
-            return None, op.id
-        if op is not None and channel_profile not in _name_collisions_warned:
-            _name_collisions_warned.add(channel_profile)
+    name = profile_path.strip("/")
+
+    def output_profile(n):
+        return OutputProfile.objects.filter(name=n, is_active=True).first()
+
+    op = output_profile(name)
+    if ChannelProfile.objects.filter(name=name).exists():
+        if op is not None and name not in _name_collisions_warned:
+            _name_collisions_warned.add(name)
             logger.warning(
                 "HDHR: '%s' names both a ChannelProfile and an OutputProfile; using the ChannelProfile. "
-                "Use /hdhr/<channel_profile>/<output_profile>/ to select both.", channel_profile,
+                "Use /hdhr/<channel_profile>/<output_profile>/ to select both.", name,
             )
-    return channel_profile, output_profile_id
+        return name, output_profile_id
+    if op is not None:
+        return None, op.id
+
+    for i in [j for j, c in enumerate(name) if c == "/"]:
+        head, tail = name[:i], name[i + 1:]
+        if ChannelProfile.objects.filter(name=head).exists():
+            op = output_profile(tail)
+            if op is not None:
+                return head, op.id
+            logger.warning("HDHR output profile '%s' not found or inactive", tail)
+            return head, output_profile_id
+
+    logger.warning("HDHR: no channel or output profile matches '%s'", name)
+    return name, output_profile_id
 
 
 def _resolve_hdhr_output_profile_id(output_profile_id):
@@ -143,7 +158,7 @@ class LineupAPIView(APIView):
     @extend_schema(
         description="Retrieve the available channel lineup",
     )
-    def get(self, request, channel_profile=None, output_profile=None, output_profile_id=None):
+    def get(self, request, channel_profile=None, profile_path=None, output_profile_id=None):
         blocked = _hdhr_network_check(request)
         if blocked is not None:
             return blocked
@@ -151,7 +166,7 @@ class LineupAPIView(APIView):
         from apps.channels.managers import with_effective_values
         from apps.channels.utils import format_channel_number
 
-        channel_profile, output_profile_id = _resolve_hdhr_profiles(channel_profile, output_profile, output_profile_id)
+        channel_profile, output_profile_id = _resolve_hdhr_profiles(channel_profile, profile_path, output_profile_id)
 
         if channel_profile is not None:
             try:
@@ -209,7 +224,7 @@ class LineupStatusAPIView(APIView):
     @extend_schema(
         description="Retrieve the HDHomeRun lineup status",
     )
-    def get(self, request, channel_profile=None, output_profile=None, output_profile_id=None):
+    def get(self, request, channel_profile=None, profile_path=None, output_profile_id=None):
         blocked = _hdhr_network_check(request)
         if blocked is not None:
             return blocked

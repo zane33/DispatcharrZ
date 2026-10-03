@@ -86,6 +86,7 @@ describe('SettingsUtils', () => {
         hdhr_friendly_name: 'Dispatcharr HDHomeRun',
         hdhr_device_id: '',
         hdhr_tuner_count: null,
+        hdhr_advertised_url: '',
         m3u_hash_key: ['name', 'url'],
       });
       expect(result).not.toHaveProperty('output_profile_id');

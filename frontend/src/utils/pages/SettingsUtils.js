@@ -35,6 +35,7 @@ const GROUP_CONFIG = {
       hdhr_friendly_name: { type: 'string', default: 'Dispatcharr HDHomeRun' },
       hdhr_device_id: { type: 'string', default: '' },
       hdhr_tuner_count: { type: 'id' }, // nullable int; null = auto
+      hdhr_advertised_url: { type: 'string', default: '' },
     },
   },
   epg_settings: {

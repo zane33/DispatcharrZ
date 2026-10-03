@@ -54,6 +54,21 @@ class PacketTests(SimpleTestCase):
             self.assertIsNone(d.handle_request(other, "10.0.0.9", settings, "9191"))
             self.assertIsNone(d.handle_request(b"garbage", "10.0.0.9", settings, "9191"))
 
+    def test_handle_request_uses_advertised_url_over_detected_ip(self):
+        settings = {"discovery_enabled": True, "device_id": "1058A2E9", "tuner_count": 2,
+                    "advertised_url": "https://tv.example.com:8443"}
+        with patch.object(d, "local_ip_for", return_value="172.21.0.2"):
+            reply = d.handle_request(JELLYFIN_REQ, "10.0.0.9", settings, "9191")
+        self.assertEqual(d.parse_packet(reply)[1][d.TAG_BASE_URL], b"https://tv.example.com:8443/hdhr")
+
+    def test_normalize_advertised_url(self):
+        self.assertEqual(d.normalize_advertised_url(None), "")
+        self.assertEqual(d.normalize_advertised_url("  "), "")
+        self.assertEqual(d.normalize_advertised_url("http://192.168.1.10:9191/"), "http://192.168.1.10:9191")
+        self.assertEqual(d.normalize_advertised_url("https://tv.example.com"), "https://tv.example.com")
+        for bad in ("192.168.1.10:9191", "ftp://x", "http://", "http://h/hdhr", "http://h?x=1", "http://h:99999"):
+            self.assertIsNone(d.normalize_advertised_url(bad), bad)
+
 
 class DiscoverJsonTests(TestCase):
     def test_discover_json_reflects_settings_and_generates_id(self):
