@@ -23,6 +23,10 @@ vi.mock('../../forms/ChannelUtils.js', () => ({
   ],
 }));
 
+vi.mock('../../../store/outputProfiles.jsx', () => ({
+  default: { getState: () => ({ profiles: [{ id: 7, name: 'Store Profile' }] }) },
+}));
+
 vi.mock('../../../api.js', () => ({
   default: {
     reorderChannel: vi.fn(),
@@ -384,22 +388,38 @@ describe('ChannelsTableUtils', () => {
 
   // ── buildHDHRUrl ────────────────────────────────────────────────────────────
   describe('buildHDHRUrl', () => {
-    it('returns hdhrUrl unchanged when no output profile', () => {
-      expect(ChannelsTableUtils.buildHDHRUrl('', 'http://localhost/hdhr')).toBe(
-        'http://localhost/hdhr'
+    const profiles = [
+      { id: 1, name: 'Direct' },
+      { id: 2, name: '720p Transcode' },
+    ];
+    it('returns base url when no output profile selected', () => {
+      expect(
+        ChannelsTableUtils.buildHDHRUrl('', 'http://localhost/hdhr', profiles)
+      ).toBe('http://localhost/hdhr');
+    });
+    it('appends the URL-encoded profile NAME, not the id', () => {
+      expect(
+        ChannelsTableUtils.buildHDHRUrl('2', 'http://localhost/hdhr', profiles)
+      ).toBe('http://localhost/hdhr/720p%20Transcode');
+    });
+    it('places the output profile after the channel profile segment', () => {
+      expect(
+        ChannelsTableUtils.buildHDHRUrl(
+          '1',
+          'http://localhost/hdhr/Sports/',
+          profiles
+        )
+      ).toBe('http://localhost/hdhr/Sports/Direct');
+    });
+    it('reads profiles from the store by default', () => {
+      expect(ChannelsTableUtils.buildHDHRUrl('7', 'http://localhost/hdhr')).toBe(
+        'http://localhost/hdhr/Store%20Profile'
       );
     });
-
-    it('appends output_profile segment when profile id provided', () => {
+    it('falls back to the numeric route for an unknown id', () => {
       expect(
-        ChannelsTableUtils.buildHDHRUrl('2', 'http://localhost/hdhr')
-      ).toBe('http://localhost/hdhr/output_profile/2');
-    });
-
-    it('strips trailing slash before appending', () => {
-      expect(
-        ChannelsTableUtils.buildHDHRUrl('1', 'http://localhost/hdhr/')
-      ).toBe('http://localhost/hdhr/output_profile/1');
+        ChannelsTableUtils.buildHDHRUrl('9', 'http://localhost/hdhr', profiles)
+      ).toBe('http://localhost/hdhr/output_profile/9');
     });
   });
 

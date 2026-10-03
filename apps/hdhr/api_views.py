@@ -6,6 +6,7 @@ from apps.accounts.permissions import Authenticated, permission_classes_by_actio
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponse
 import logging
 from xml.sax.saxutils import escape
+from django.utils.encoding import escape_uri_path
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 from django.shortcuts import get_object_or_404
@@ -52,24 +53,18 @@ class DiscoverAPIView(APIView):
     @extend_schema(
         description="Retrieve HDHomeRun device discovery information",
     )
-    def get(self, request, channel_profile=None, output_profile_id=None):
+    def get(self, request, channel_profile=None, output_profile=None, output_profile_id=None):
         blocked = _hdhr_network_check(request)
         if blocked is not None:
             return blocked
 
-        uri_parts = ["hdhr"]
-        if channel_profile is not None:
-            uri_parts.append(channel_profile)
-        if output_profile_id is not None:
-            uri_parts.append("output_profile")
-            uri_parts.append(str(output_profile_id))
-
-        base_url = build_absolute_uri_with_port(request, f'/{"/".join(uri_parts)}/').rstrip("/")
+        # Echo whatever path form the client used (by-name, legacy numeric, combined).
+        base_url = build_absolute_uri_with_port(request, escape_uri_path(request.path.rsplit("/", 1)[0]))
 
         from core.models import CoreSettings
         hdhr = CoreSettings.get_hdhr_settings()
 
-        slug_parts = [p for p in [channel_profile, str(output_profile_id) if output_profile_id is not None else None] if p]
+        slug_parts = [p for p in [channel_profile, output_profile, str(output_profile_id) if output_profile_id is not None else None] if p]
         device_ID = f"{hdhr['device_id']}-{'-'.join(slug_parts)}" if slug_parts else hdhr["device_id"]
         friendly_name = f"{hdhr['friendly_name']} - {' / '.join(slug_parts)}" if slug_parts else hdhr["friendly_name"]
 
@@ -85,6 +80,38 @@ class DiscoverAPIView(APIView):
             "TunerCount": hdhr["tuner_count"],
         }
         return JsonResponse(data)
+
+
+_name_collisions_warned = set()
+
+
+def _resolve_hdhr_profiles(channel_profile=None, output_profile=None, output_profile_id=None):
+    """Map `<str>` URL segments (names) to (channel_profile_name | None, output_profile_id | None).
+
+    `/hdhr/<name>/` is a ChannelProfile name if one exists, else an active OutputProfile
+    name. On collision the ChannelProfile wins (warned once per name); use the combined
+    `/hdhr/<channel_profile>/<output_profile>/` form to get both.
+    """
+    from core.models import OutputProfile
+
+    if output_profile is not None:
+        op = OutputProfile.objects.filter(name=output_profile, is_active=True).first()
+        if op is None:
+            logger.warning("HDHR output profile '%s' not found or inactive", output_profile)
+        output_profile_id = op.id if op else output_profile_id
+
+    if channel_profile is not None:
+        is_channel_profile = ChannelProfile.objects.filter(name=channel_profile).exists()
+        op = OutputProfile.objects.filter(name=channel_profile, is_active=True).first()
+        if op is not None and not is_channel_profile:
+            return None, op.id
+        if op is not None and channel_profile not in _name_collisions_warned:
+            _name_collisions_warned.add(channel_profile)
+            logger.warning(
+                "HDHR: '%s' names both a ChannelProfile and an OutputProfile; using the ChannelProfile. "
+                "Use /hdhr/<channel_profile>/<output_profile>/ to select both.", channel_profile,
+            )
+    return channel_profile, output_profile_id
 
 
 def _resolve_hdhr_output_profile_id(output_profile_id):
@@ -113,13 +140,15 @@ class LineupAPIView(APIView):
     @extend_schema(
         description="Retrieve the available channel lineup",
     )
-    def get(self, request, channel_profile=None, output_profile_id=None):
+    def get(self, request, channel_profile=None, output_profile=None, output_profile_id=None):
         blocked = _hdhr_network_check(request)
         if blocked is not None:
             return blocked
 
         from apps.channels.managers import with_effective_values
         from apps.channels.utils import format_channel_number
+
+        channel_profile, output_profile_id = _resolve_hdhr_profiles(channel_profile, output_profile, output_profile_id)
 
         if channel_profile is not None:
             try:
@@ -177,7 +206,7 @@ class LineupStatusAPIView(APIView):
     @extend_schema(
         description="Retrieve the HDHomeRun lineup status",
     )
-    def get(self, request, channel_profile=None, output_profile_id=None):
+    def get(self, request, channel_profile=None, output_profile=None, output_profile_id=None):
         blocked = _hdhr_network_check(request)
         if blocked is not None:
             return blocked

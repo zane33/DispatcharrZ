@@ -3,6 +3,7 @@ import {
   OVERRIDABLE_FIELDS,
 } from '../forms/ChannelUtils.js';
 import API from '../../api.js';
+import useOutputProfilesStore from '../../store/outputProfiles.jsx';
 
 // Inline edits on auto-synced channels route into the override row so
 // sync cannot overwrite them. If the new value matches the provider's,
@@ -227,9 +228,21 @@ export const buildFetchParams = ({
   return params;
 };
 
-export const buildHDHRUrl = (hdhrOutputProfileId, hdhrUrl) => {
+// The Select stores the output profile id; the URL uses the profile NAME
+// (/hdhr/<name> or /hdhr/<channelProfile>/<name>) so it reads like the
+// channel-profile segment. Falls back to the legacy numeric route if the
+// id is not in the list (e.g. profiles not loaded yet).
+export const buildHDHRUrl = (
+  hdhrOutputProfileId,
+  hdhrUrl,
+  outputProfiles = useOutputProfilesStore.getState().profiles
+) => {
   if (!hdhrOutputProfileId) return hdhrUrl;
-  // Insert output_profile segment before the trailing slash (or at end)
   const base = hdhrUrl.replace(/\/$/, '');
-  return `${base}/output_profile/${hdhrOutputProfileId}`;
+  const name = outputProfiles.find(
+    (p) => `${p.id}` === `${hdhrOutputProfileId}`
+  )?.name;
+  return name
+    ? `${base}/${encodeURIComponent(name)}`
+    : `${base}/output_profile/${hdhrOutputProfileId}`;
 };

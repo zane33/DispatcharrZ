@@ -24,7 +24,7 @@ Combine streams from multiple providers into a single interface. Manage, filter,
 
 📺 **Integrate with Media Centers**\
 Use HDHomeRun emulation to add virtual tuners to **Plex**, **Emby**, or **Jellyfin**. They'll discover Dispatcharr as a live TV source and can record programs directly to their own DVR libraries.
-Auto-detection answers the HDHomeRun discovery broadcast on UDP 65001; run the container with `network_mode: host` (bridge networking does not forward LAN broadcasts) or add the tuner manually at `http://<host>:9191/hdhr/discover.json`. Device name, device ID and tuner count live under Settings → Stream Settings.
+Auto-detection answers the HDHomeRun discovery broadcast on UDP 65001; run the container with `network_mode: host` (bridge networking does not forward LAN broadcasts) or add the tuner manually at `http://<host>:9191/hdhr/discover.json`. Device name, device ID and tuner count live under Settings → Stream Settings. Scope a tuner to a channel profile and/or an output (transcode) profile by name: `/hdhr/<channel profile>/`, `/hdhr/<output profile>/` or the combined `/hdhr/<channel profile>/<output profile>/` (legacy `/hdhr/output_profile/<id>/` still works).
 
 📼 **Record with Built-in DVR**\
 Schedule one-time or recurring recordings from the TV Guide, manage series rules, and optionally strip commercials with Comskip. Watch recordings while they're still in progress.

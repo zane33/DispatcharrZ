@@ -61,6 +61,7 @@ import {
   NumberInput,
   Pagination,
   Paper,
+  Modal,
   Popover,
   PopoverDropdown,
   PopoverTarget,
@@ -113,6 +114,43 @@ import {
   updateProfileChannel,
   updateProfileChannels,
 } from '../../utils/tables/ChannelsTableUtils.js';
+
+
+// Desktop: Popover. Mobile: full-screen Modal, because a Popover anchored near the
+// bottom of a phone screen pushes its (non-portaled) Select dropdowns off-screen.
+const LinkPanel = ({ isMobile, children }) => {
+  const [opened, setOpened] = useState(false);
+  const kids = React.Children.toArray(children);
+  const target = kids.find((c) => c.type === PopoverTarget);
+  const dropdown = kids.find((c) => c.type === PopoverDropdown);
+  if (!isMobile) {
+    return (
+      <Popover
+        withArrow
+        shadow="md"
+        zIndex={1000}
+        position="bottom-start"
+        withinPortal
+      >
+        {children}
+      </Popover>
+    );
+  }
+  const button = React.Children.only(target.props.children);
+  return (
+    <>
+      {React.cloneElement(button, { onClick: () => setOpened(true) })}
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title={button.props.children}
+        zIndex={1000}
+      >
+        {dropdown.props.children}
+      </Modal>
+    </>
+  );
+};
 
 const flexibleColumns = [
   {
@@ -1397,13 +1435,7 @@ const ChannelsTable = ({ onReady }) => {
               Links:
             </Text>
             <Group gap={5} style={{ paddingLeft: 10 }}>
-              <Popover
-                withArrow
-                shadow="md"
-                zIndex={1000}
-                position="bottom-start"
-                withinPortal
-              >
+              <LinkPanel isMobile={isMobile}>
                 <PopoverTarget>
                   <Button
                     leftSection={<Tv2 size={18} />}
@@ -1459,21 +1491,15 @@ const ChannelsTable = ({ onReady }) => {
                       placeholder="System default"
                       value={hdhrOutputProfileId || null}
                       onChange={(value) => setHdhrOutputProfileId(value || '')}
-                      comboboxProps={{ withinPortal: false }}
+                      comboboxProps={{ withinPortal: isMobile }}
                       data={outputProfiles
                         .filter((p) => p.is_active)
                         .map((p) => ({ value: `${p.id}`, label: p.name }))}
                     />
                   </Stack>
                 </PopoverDropdown>
-              </Popover>
-              <Popover
-                withArrow
-                shadow="md"
-                zIndex={1000}
-                position="bottom-start"
-                withinPortal
-              >
+              </LinkPanel>
+              <LinkPanel isMobile={isMobile}>
                 <PopoverTarget>
                   <Button
                     leftSection={<ScreenShare size={18} />}
@@ -1554,7 +1580,7 @@ const ChannelsTable = ({ onReady }) => {
                           tvg_id_source: value,
                         }))
                       }
-                      comboboxProps={{ withinPortal: false }}
+                      comboboxProps={{ withinPortal: isMobile }}
                       data={[
                         { value: 'channel_number', label: 'Channel Number' },
                         { value: 'tvg_id', label: 'TVG-ID' },
@@ -1573,7 +1599,7 @@ const ChannelsTable = ({ onReady }) => {
                           output_format: value || '',
                         }))
                       }
-                      comboboxProps={{ withinPortal: false }}
+                      comboboxProps={{ withinPortal: isMobile }}
                       data={[
                         { value: 'mpegts', label: 'MPEG-TS' },
                         { value: 'fmp4', label: 'fMP4 (fragmented MP4)' },
@@ -1592,21 +1618,15 @@ const ChannelsTable = ({ onReady }) => {
                           output_profile: value || '',
                         }))
                       }
-                      comboboxProps={{ withinPortal: false }}
+                      comboboxProps={{ withinPortal: isMobile }}
                       data={outputProfiles
                         .filter((p) => p.is_active)
                         .map((p) => ({ value: `${p.id}`, label: p.name }))}
                     />
                   </Stack>
                 </PopoverDropdown>
-              </Popover>
-              <Popover
-                withArrow
-                shadow="md"
-                zIndex={1000}
-                position="bottom-start"
-                withinPortal
-              >
+              </LinkPanel>
+              <LinkPanel isMobile={isMobile}>
                 <PopoverTarget>
                   <Button
                     leftSection={<Scroll size={18} />}
@@ -1678,7 +1698,7 @@ const ChannelsTable = ({ onReady }) => {
                           tvg_id_source: value,
                         }))
                       }
-                      comboboxProps={{ withinPortal: false }}
+                      comboboxProps={{ withinPortal: isMobile }}
                       data={[
                         { value: 'channel_number', label: 'Channel Number' },
                         { value: 'tvg_id', label: 'TVG-ID' },
@@ -1715,7 +1735,7 @@ const ChannelsTable = ({ onReady }) => {
                     />
                   </Stack>
                 </PopoverDropdown>
-              </Popover>
+              </LinkPanel>
             </Group>
           </Flex>
         </Flex>
