@@ -144,7 +144,6 @@ const LinkPanel = ({ isMobile, children }) => {
         opened={opened}
         onClose={() => setOpened(false)}
         title={button.props.children}
-        zIndex={1000}
       >
         {dropdown.props.children}
       </Modal>

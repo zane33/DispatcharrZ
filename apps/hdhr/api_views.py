@@ -65,7 +65,10 @@ class DiscoverAPIView(APIView):
         hdhr = CoreSettings.get_hdhr_settings()
 
         slug_parts = [p for p in [channel_profile, output_profile, str(output_profile_id) if output_profile_id is not None else None] if p]
-        device_ID = f"{hdhr['device_id']}-{'-'.join(slug_parts)}" if slug_parts else hdhr["device_id"]
+        # Profile variants need their own ID so clients see distinct tuners, but it
+        # must stay a checksum-valid 8-hex ID or libhdhomerun clients (Plex) drop it.
+        from .discovery import generate_device_id
+        device_ID = generate_device_id(f"{hdhr['device_id']}:{'/'.join(slug_parts)}") if slug_parts else hdhr["device_id"]
         friendly_name = f"{hdhr['friendly_name']} - {' / '.join(slug_parts)}" if slug_parts else hdhr["friendly_name"]
 
         data = {
