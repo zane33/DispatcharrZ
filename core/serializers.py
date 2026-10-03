@@ -54,6 +54,22 @@ class OutputProfileSerializer(serializers.ModelSerializer):
         model = OutputProfile
         fields = ["id", "name", "command", "parameters", "is_active", "locked"]
 
+    def validate_parameters(self, value):
+        # Output profiles transcode an already-fetched TS over stdin/stdout. Stream-profile
+        # placeholders are never substituted here, so ffmpeg would open the literal
+        # file "{streamUrl}" and fail on every play.
+        if "{" in value and "}" in value:
+            raise serializers.ValidationError(
+                "Output profiles do not support {placeholders} like {streamUrl}/{userAgent}; "
+                "read the input from pipe:0 instead."
+            )
+        if "pipe:0" not in value or "pipe:1" not in value:
+            raise serializers.ValidationError(
+                "Parameters must read the input from pipe:0 and write the output to pipe:1 "
+                "(e.g. '-i pipe:0 ... -f mpegts pipe:1')."
+            )
+        return value
+
 
 class CoreSettingsSerializer(serializers.ModelSerializer):
     class Meta:
