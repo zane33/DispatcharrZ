@@ -2,7 +2,10 @@
 import json
 import ipaddress
 
+from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers
+from dispatcharr.utils import validate_proxy_auth_header
+from .models import CoreSettings, UserAgent, StreamProfile, OutputProfile, DVR_SETTINGS_KEY, NETWORK_ACCESS_KEY, SYSTEM_SETTINGS_KEY, REVERSE_PROXY_AUTH_KEY
 
 from dispatcharr.log_collector import (
     DEFAULT_LOG_KEEP,
@@ -10,7 +13,7 @@ from dispatcharr.log_collector import (
     MAX_LOG_KEEP,
     MAX_LOG_MB,
 )
-from .models import CoreSettings, UserAgent, StreamProfile, OutputProfile, DVR_SETTINGS_KEY, NETWORK_ACCESS_KEY, SYSTEM_SETTINGS_KEY, STREAM_SETTINGS_KEY
+
 
 
 def _clamp_int(value, default, lo, hi):
@@ -35,6 +38,14 @@ class UserAgentSerializer(serializers.ModelSerializer):
         ]
 
 
+def _update_profile(serializer, instance, validated_data):
+    """Save a profile and turn a locked-profile rejection into a 400."""
+    try:
+        return serializers.ModelSerializer.update(serializer, instance, validated_data)
+    except DjangoValidationError as exc:
+        raise serializers.ValidationError(exc.messages)
+
+
 class StreamProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StreamProfile
@@ -48,27 +59,17 @@ class StreamProfileSerializer(serializers.ModelSerializer):
             "locked",
         ]
 
+    def update(self, instance, validated_data):
+        return _update_profile(self, instance, validated_data)
+
 
 class OutputProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = OutputProfile
         fields = ["id", "name", "command", "parameters", "is_active", "locked"]
 
-    def validate_parameters(self, value):
-        # Output profiles transcode an already-fetched TS over stdin/stdout. Stream-profile
-        # placeholders are never substituted here, so ffmpeg would open the literal
-        # file "{streamUrl}" and fail on every play.
-        if "{" in value and "}" in value:
-            raise serializers.ValidationError(
-                "Output profiles do not support {placeholders} like {streamUrl}/{userAgent}; "
-                "read the input from pipe:0 instead."
-            )
-        if "pipe:0" not in value or "pipe:1" not in value:
-            raise serializers.ValidationError(
-                "Parameters must read the input from pipe:0 and write the output to pipe:1 "
-                "(e.g. '-i pipe:0 ... -f mpegts pipe:1')."
-            )
-        return value
+    def update(self, instance, validated_data):
+        return _update_profile(self, instance, validated_data)
 
 
 class CoreSettingsSerializer(serializers.ModelSerializer):
@@ -116,10 +117,25 @@ class CoreSettingsSerializer(serializers.ModelSerializer):
                 if "log_persist" in value:
                     value["log_persist"] = value["log_persist"] is not False
 
-        if instance.key == STREAM_SETTINGS_KEY:
-            value = validated_data.get("value")
-            if isinstance(value, dict):
-                self._validate_hdhr(value)
+        if instance.key == REVERSE_PROXY_AUTH_KEY:
+            value = validated_data.get("value") or {}
+            header = (value.get("header") or "").strip()
+            if value.get("enabled") and not header:
+                raise serializers.ValidationError(
+                    {"message": "A header name is required to enable reverse proxy auth."}
+                )
+            if header and not validate_proxy_auth_header(header):
+                raise serializers.ValidationError(
+                    {
+                        "message": (
+                            "Invalid header name. Use letters, digits and dashes "
+                            "only (for example X-Forwarded-User)."
+                        ),
+                        "value": header,
+                    }
+                )
+            value["header"] = header
+            value["enabled"] = bool(value.get("enabled"))
 
         # Sanitize series_rules when DVR settings are saved through the
         # generic settings API (e.g. Settings page round-trip) to prevent
@@ -140,40 +156,6 @@ class CoreSettingsSerializer(serializers.ModelSerializer):
         # in core/signals.py to ensure it happens even if settings are updated elsewhere
 
         return result
-
-    @staticmethod
-    def _validate_hdhr(value):
-        from apps.hdhr.discovery import normalize_advertised_url, validate_device_id
-
-        errors = {}
-        device_id = value.get("hdhr_device_id")
-        if device_id:
-            device_id = str(device_id).strip().upper()
-            if not validate_device_id(device_id):
-                errors["hdhr_device_id"] = "Must be 8 hex digits with a valid HDHomeRun checksum (leave blank to auto-generate)"
-            value["hdhr_device_id"] = device_id
-        elif "hdhr_device_id" in value:
-            value["hdhr_device_id"] = ""
-        if "hdhr_tuner_count" in value:
-            tuner_count = value["hdhr_tuner_count"]
-            # None/"" = auto (calculate_tuner_count); otherwise clamp to the 1-byte tag range.
-            value["hdhr_tuner_count"] = (
-                None if tuner_count in (None, "") else _clamp_int(tuner_count, None, 1, 255)
-            )
-            if tuner_count not in (None, "") and value["hdhr_tuner_count"] is None:
-                errors["hdhr_tuner_count"] = "Tuner count must be an integer between 1 and 255"
-        name = value.get("hdhr_friendly_name")
-        if name is not None and len(str(name).strip()) > 64:
-            errors["hdhr_friendly_name"] = "Friendly name must be 64 characters or fewer"
-        if "hdhr_advertised_url" in value:
-            advertised = normalize_advertised_url(value["hdhr_advertised_url"])
-            if advertised is None:
-                errors["hdhr_advertised_url"] = "Must be an http(s) URL with host and optional port, no path (e.g. http://192.168.1.10:9191)"
-            else:
-                value["hdhr_advertised_url"] = advertised
-        if errors:
-            raise serializers.ValidationError({"value": errors})
-
 
 class ProxySettingsSerializer(serializers.Serializer):
     """Serializer for proxy settings stored as JSON in CoreSettings"""
